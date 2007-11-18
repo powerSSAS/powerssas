@@ -1,0 +1,92 @@
+<Types>
+	<Type>
+		<Name>Gosbell.PowerSSAS.Types.Session</Name>
+		<Members>
+			<!--
+			<MemberSet>
+				<Name>PsStandardMembers</Name>
+				<Members>
+					<NoteProperty>
+						<Name>DefaultDisplayProperty</Name>
+						<Value>Id</Value>
+					</NoteProperty>
+					<PropertySet>
+						<Name>DefaultDisplayPropertySet</Name>
+						<ReferencedProperties>
+							<Name>Id</Name>
+							<Name>Spid</Name>
+							<Name>ConnectionId</Name>
+							<Name>UserName</Name>
+							<Name>CurrentDatabase</Name>
+							<Name>StartTime</Name>
+							<Name>ElapsedTimeMs</Name>
+							<Name>LastCommandStartTime</Name>
+							<Name>LastCommandEndTime</Name>
+							<Name>LastCommandElapsedTimeMs</Name>
+							<Name>IdleTimeMs</Name>
+							<Name>CpuTimeMs</Name>
+							<Name>LastCommand</Name>
+							<Name>LastCommandCpuTimeMs</Name>
+						</ReferencedProperties>
+
+					</PropertySet>
+					<PropertySet>
+						<Name>DefaultKeyPropertySet</Name>
+						<ReferencedProperties>
+							<Name>Id</Name>
+						</ReferencedProperties>
+					</PropertySet>
+				</Members>
+			</MemberSet>
+			-->
+				<MemberSet>
+					<Name>PSStandardMembers</Name>
+					<Members>
+						<PropertySet>
+							<Name>DefaultDisplayPropertySet</Name>
+							<ReferencedProperties>
+								<Name>Id</Name>
+								<Name>UserName</Name>
+								<Name>CurrentDatabase</Name>
+								<Name>StartTime</Name>
+								<Name>LastCommand</Name>
+								<Name>LastCommandCpuTimeMs</Name>
+							</ReferencedProperties>
+						</PropertySet>
+					</Members>
+				</MemberSet>
+			
+			<ScriptProperty>
+				<Name>Connection</Name>
+				<GetScriptBlock>
+					get-asconnection -ServerName $this.ServerName -ID $this.ConnectionID
+				</GetScriptBlock>
+			</ScriptProperty>
+
+		</Members>
+	</Type>
+	<Type>
+		<Name>Gosbell.PowerSSAS.PowerSSASProvider+CollectionProperty</Name>
+		<Members>
+			<MemberSet>
+				<Name>PSStandardMembers</Name>
+				<Members>
+					<PropertySet>
+						<Name>DefaultDisplayPropertySet</Name>
+						<ReferencedProperties>
+							<Name>Name</Name>
+							<Name>Value</Name>
+							<Name>ObjectType</Name>
+						</ReferencedProperties>
+					</PropertySet>
+				</Members>
+
+			</MemberSet>
+			<ScriptProperty>
+				<Name>HelloWorld</Name>
+				<GetScriptBlock>"Hello World"</GetScriptBlock>
+			</ScriptProperty>
+		</Members>
+	</Type>
+
+</Types>
