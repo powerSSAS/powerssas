@@ -3,7 +3,7 @@ Imports System.Xml
 Imports Microsoft.AnalysisServices.Xmla
 
 Namespace Cmdlets
-    <Cmdlet(VerbsCommon.Clear, "Session", SupportsShouldProcess:=True)> _
+    <Cmdlet(VerbsCommon.Clear, "ASSession", SupportsShouldProcess:=True)> _
     Public Class cmdletClearSession
         Inherits Cmdlet
 
