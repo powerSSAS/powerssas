@@ -4,10 +4,77 @@ Imports Microsoft.AnalysisServices.Xmla
 Imports System.Globalization
 
 Namespace Utils
-    Public Class xmlaDiscover
+
+    Public Delegate Sub OutputObjectDelegate(ByVal output As Object)
+
+    Public Class XmlaDiscover
+
+        Friend Sub [Stop]()
+            mStopping = True
+        End Sub
+
+        Private mStopping As Boolean = False
+        Public ReadOnly Property Stopping() As Boolean
+            Get
+                Return mStopping
+            End Get
+        End Property
+
+        Public Sub Discover(ByVal command As String, ByVal serverName As String, ByVal restrictions As String, ByVal properties As String, ByVal OutputCallback As OutputObjectDelegate)
+            Discover(command, serverName, restrictions, properties, OutputCallback, False)
+        End Sub
+
+        Public Sub Discover(ByVal command As String, ByVal serverName As String, ByVal restrictions As String, ByVal properties As String, ByVal OutputCallback As OutputObjectDelegate, ByVal rawResultSet As Boolean)
+            Dim x As New Microsoft.AnalysisServices.Xmla.XmlaClient
+            x.Connect("data source=" & serverName)
+            Try
+                Dim res As String = ""
+                If command.Contains("<") Then
+                    res = x.Send(command, Nothing)
+                Else
+                    x.Discover(command.ToUpper(), restrictions, properties, res, False, False, False)
+                End If
+                x.Disconnect(True)
+                If rawResultSet Then
+                    OutputCallback(res)
+                Else
+                    ProcessXmlaResult(serverName, res, OutputCallback)
+                End If
+            Finally
+                x.Disconnect()
+            End Try
+
+        End Sub
+
+
+        '// This routine is fairly "brute force", creating an XmlDocument and 
+        '// then iterating through the nodes
+        Private Sub ProcessXmlaResult(ByVal serverName As String, ByVal xmlaResult As String, ByVal OutputCallback As OutputObjectDelegate)
+
+            Dim rowSchema As New Dictionary(Of String, String)
+            Dim doc As XmlDocument = New XmlDocument()
+            doc.LoadXml(xmlaResult)
+
+            '//               return         root       schema/rows       Look for element with attribute "name" = row
+            '//                  ^             ^             ^             ^
+            '//xmlDom.ChildNodes[0].ChildNodes[0].ChildNodes[0].ChildNodes[0].Attributes.Count
+            For Each n As XmlNode In doc.ChildNodes(0).ChildNodes(0).ChildNodes
+                If ((n.NodeType = XmlNodeType.Element) AndAlso (n.LocalName = "schema")) Then
+                    rowSchema = buildPSObjectFromSchema(n)
+                End If
+                If ((n.NodeType = XmlNodeType.Element) AndAlso (n.LocalName = "row")) Then
+                    OutputCallback(GetPSObject(rowSchema, serverName, n))
+                End If
+                If Me.Stopping Then
+                    Exit For
+                End If
+            Next 'n            
+
+        End Sub
+
+
 
         Public Function Discover(ByVal command As String, ByVal serverName As String, ByVal restrictions As String, ByVal properties As String) As List(Of Object)
-
             Dim x As New Microsoft.AnalysisServices.Xmla.XmlaClient
             x.Connect("data source=" & serverName)
             Dim res As String = ""
@@ -19,14 +86,11 @@ Namespace Utils
             x.Disconnect(True)
 
             Return GetObjectListFromXmla(serverName, res)
-
         End Function
-
 
         '// This routine is fairly "brute force", creating an XmlDocument and 
         '// then iterating through the nodes
         Private Function GetObjectListFromXmla(ByVal serverName As String, ByVal xmlaResult As String) As List(Of Object)
-
             Dim pso As PSObject = Nothing
             Dim rowSchema As New Dictionary(Of String, String)
             Dim doc As XmlDocument = New XmlDocument()
@@ -98,7 +162,6 @@ Namespace Utils
                         If TypeOf prop.Value Is IList Then
                             CType(prop.Value, IList).Add(convertObj(n, rowSchema.Item(n.LocalName)))
                         Else
-                            Dim tmp As Object = prop.Value
                             Dim lst As New List(Of Object)
                             lst.Add(prop.Value)
                             lst.Add(convertObj(n, rowSchema.Item(n.LocalName)))
@@ -117,7 +180,7 @@ Namespace Utils
             Select Case t
                 Case "xsd:int"
                     Return Integer.Parse(val.InnerText)
-                Case "xsd:long"
+                Case "xsd:long", "xsd:unsignedInt"
                     Return Long.Parse(val.InnerText)
                 Case "xsd:unsignedLong"
                     Return Convert.ToUInt64(val.InnerText)
@@ -136,10 +199,14 @@ Namespace Utils
             End Select
         End Function
 
-        Protected Function NormalizeName(ByVal name As String) As String
-            Dim ci As CultureInfo = System.Threading.Thread.CurrentThread.CurrentCulture
-            Dim ti As TextInfo = ci.TextInfo
-            Return ti.ToTitleCase(name.ToLower.Replace("_", " ")).Replace(" ", "")
+        Protected Shared Function NormalizeName(ByVal name As String) As String
+            If name.Contains("_") Or name.Contains(" ") Then
+                Dim ci As CultureInfo = System.Threading.Thread.CurrentThread.CurrentCulture
+                Dim ti As TextInfo = ci.TextInfo
+                Return ti.ToTitleCase(name.ToLower.Replace("_", " ")).Replace(" ", "")
+            Else
+                Return name
+            End If
         End Function
     End Class
 End Namespace

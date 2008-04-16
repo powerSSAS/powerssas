@@ -12,7 +12,6 @@ Public Class PowerSSASProvider
 
     Private Const PATH_SEPARATOR As String = "\"
 
-
     'Protected Overrides Sub [Stop]()
     '    MyBase.[Stop]()
     '    If Not Me.PSDriveInfo Is Nothing Then
@@ -22,8 +21,6 @@ Public Class PowerSSASProvider
     '        End If
     '    End If
     'End Sub
-
-
 
     Protected Overrides Function NewDrive(ByVal drive As PSDriveInfo) As PSDriveInfo
 
@@ -114,7 +111,8 @@ Public Class PowerSSASProvider
         Dim isCont As Boolean = False
         itm = GetCurrentItem(path)
         If TypeOf itm Is ICollection Then
-            For Each o As Object In CType(itm, ICollection)
+            Dim itmColl As ICollection = CType(itm, ICollection)
+            For Each o As Object In itmColl
                 If TypeOf o Is ICollection _
                 OrElse TypeOf o Is MajorObject _
                 OrElse TypeOf o Is Microsoft.AnalysisServices.Command Then
@@ -212,7 +210,7 @@ Public Class PowerSSASProvider
         End Try
     End Function
 
-    Public Function GetXmlaCreate(ByVal majorobj As MajorObject) As Xml.XmlDocument
+    Public Function GetXmlaCreate(ByVal majorobj As MajorObject) As Xml.XPath.IXPathNavigable ' Xml.XmlDocument
         Dim scr As New Microsoft.AnalysisServices.Scripter
         Dim sbOut As New Text.StringBuilder
         Dim xmlOut As Xml.XmlWriter = Xml.XmlWriter.Create(sbOut)
@@ -223,25 +221,24 @@ Public Class PowerSSASProvider
     End Function
 
 #Region "Unsupported operations"
-    Protected Overrides Sub NewItem(ByVal path As String, ByVal type As String, ByVal newItemValue As Object)
+    Protected Overrides Sub NewItem(ByVal path As String, ByVal itemTypeName As String, ByVal newItemValue As Object)
         'MyBase.NewItem(path, type, newItemValue)
-        ThrowTerminatingError(New ErrorRecord(New NotImplementedException(path), "mshAmoProvider.NewItem", ErrorCategory.NotImplemented, Nothing))
+        ThrowTerminatingError(New ErrorRecord(New NotImplementedException(path), "powerSSAS.NewItem", ErrorCategory.NotImplemented, Nothing))
     End Sub
 
     Protected Overrides Sub CopyItem(ByVal path As String, ByVal copyPath As String, ByVal recurse As Boolean)
         'MyBase.CopyItem(path, copyPath, recurse)
-        ThrowTerminatingError(New ErrorRecord(New NotImplementedException(path), "mshAmoProvider.CopyItem", ErrorCategory.NotImplemented, Nothing))
+        ThrowTerminatingError(New ErrorRecord(New NotImplementedException(path), "powerSSAS.CopyItem", ErrorCategory.NotImplemented, Nothing))
     End Sub
 
     Protected Overrides Sub RemoveItem(ByVal path As String, ByVal recurse As Boolean)
-        'MyBase.RemoveItem(path, recurse)
-        ThrowTerminatingError(New ErrorRecord(New NotImplementedException(path), "mshAmoProvider.RemoveItem", ErrorCategory.NotImplemented, Nothing))
+        ThrowTerminatingError(New ErrorRecord(New NotImplementedException(path), "powerSSAS.RemoveItem", ErrorCategory.NotImplemented, Nothing))
     End Sub
 #End Region
 
 #Region " Helper Functions "
 
-    Private Function GetAmoDriveInternal(ByVal path As String) As AmoDriveInfo
+    <System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")> Private Function GetAmoDriveInternal(ByVal path As String) As AmoDriveInfo
         Dim pathBits() As String = path.Split(PATH_SEPARATOR.ToCharArray())
         If Me.PSDriveInfo Is Nothing Then
             For Each drv As PSDriveInfo In Me.ProviderInfo.Drives
@@ -254,7 +251,7 @@ Public Class PowerSSASProvider
                     Return CType(drv, AmoDriveInfo)
                 End If
             Next
-            Throw New NullReferenceException("The drive for the path " & path & " could not be found")
+            Throw New ArgumentException("The drive for the path " & path & " could not be found")
         Else
             Return CType(Me.PSDriveInfo, AmoDriveInfo)
         End If
@@ -283,8 +280,8 @@ Public Class PowerSSASProvider
         Return itm
     End Function
 
-    Private Function CaseInsensitiveMatch(ByVal string1 As String, ByVal string2 As String) As Boolean
-        Return (String.Compare(string1, string2, True) = 0)
+    <System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")> Private Function CaseInsensitiveMatch(ByVal string1 As String, ByVal string2 As String) As Boolean
+        Return (String.Compare(string1, string2, True, System.Threading.Thread.CurrentThread.CurrentUICulture) = 0)
     End Function
 
     Private Function GetDriveRootInternal(ByVal path As String) As String
@@ -330,7 +327,7 @@ Public Class PowerSSASProvider
         End If
     End Function
 
-    Private Function NormalizePath(ByVal path As String) As String
+    Private Shared Function NormalizePath(ByVal path As String) As String
         Dim result As String = path
         If Not String.IsNullOrEmpty(path) Then
             result = path.Replace("/", PATH_SEPARATOR)
@@ -372,9 +369,9 @@ Public Class PowerSSASProvider
 
             Return lst.Item(lst.IndexOf("itemName"))
         ElseIf TypeOf obj Is ICollection Then
-            ThrowTerminatingError(New ErrorRecord(New NotImplementedException(itemName & " (ICollection) : " & obj.ToString()), "mshAmoProvider.GetCollectionItem", ErrorCategory.NotImplemented, Nothing))
+            ThrowTerminatingError(New ErrorRecord(New NotImplementedException(itemName & " (ICollection) : " & obj.ToString()), "powerSSAS.GetCollectionItem", ErrorCategory.NotImplemented, Nothing))
         Else
-            ThrowTerminatingError(New ErrorRecord(New NotImplementedException(itemName & " : " & obj.ToString()), "mshAmoProvider.GetCollectionItem", ErrorCategory.NotImplemented, Nothing))
+            ThrowTerminatingError(New ErrorRecord(New NotImplementedException(itemName & " : " & obj.ToString()), "powerSSAS.GetCollectionItem", ErrorCategory.NotImplemented, Nothing))
         End If
         Return Nothing
     End Function
@@ -386,7 +383,7 @@ Public Class PowerSSASProvider
 
         If TypeOf obj Is ClrAssembly Then
             If Not props.ContainsKey("Functions") Then
-                Dim Functions As List(Of FunctionSignature) = Utils.FunctionLister.ListFunctions(CType(obj, ClrAssembly))
+                Dim Functions As ICollection(Of FunctionSignature) = Utils.FunctionLister.ListFunctions(CType(obj, ClrAssembly))
                 props.Add("Functions", New CollectionProperty("Functions", Functions, GetType(FunctionSignature)))
             End If
         End If
