@@ -2,7 +2,7 @@ Imports System.ComponentModel
 Imports System.Management.Automation
 
 <RunInstaller(True)> _
-Public Class powerSSASSnapin
+Public Class PowerSSASSnapin
     Inherits CustomPSSnapIn
 
 

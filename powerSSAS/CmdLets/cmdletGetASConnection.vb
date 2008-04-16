@@ -3,12 +3,12 @@ Imports Gosbell.PowerSSAS.Cmdlets
 
 Namespace Cmdlets
     <Cmdlet(VerbsCommon.Get, "ASConnection")> _
-    Public Class cmdletGetASConnection
+    Public Class CmdletGetASConnection
         Inherits CmdletDiscoverBase
 
         Private mID As String = ""
         <Parameter(HelpMessage:="Returns the connections with the given ID", Mandatory:=False, Position:=2, ValueFromPipeline:=True)> _
-        Public Property ID() As String
+        Public Property Id() As String
             Get
                 Return mID
             End Get

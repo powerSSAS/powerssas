@@ -10,7 +10,7 @@ Namespace Utils
 
         Private Shared lstFuncs As List(Of FunctionSignature) = Nothing
 
-        Public Shared Function ListFunctions(ByVal ass As Microsoft.AnalysisServices.Assembly) As List(Of FunctionSignature)
+        Public Shared Function ListFunctions(ByVal ass As Microsoft.AnalysisServices.Assembly) As ICollection(Of FunctionSignature)
             Return getFunctionList(ass)
         End Function
 
@@ -65,23 +65,14 @@ Namespace Utils
                                             params = meth.GetParameters()
                                             paramList = New System.Text.StringBuilder()
                                             paramCnt = params.Length
-                                            Dim paramAry(paramCnt) As String
                                             '// add the first parameter
                                             If (paramCnt > 0) Then
-
-                                                'paramList.Append(params(0).Name)
-                                                'paramList.Append(" as ")
-                                                'paramList.Append(StripNamespace(params(0).ParameterType.ToString()))
                                                 paramList.Append(params(0).ToString())
                                             End If
                                             '// add subsequent parameters, inserting a comma before each new one.
                                             For j As Integer = 1 To paramCnt - 1
-
                                                 paramList.Append(", ")
-                                                'paramList.Append(params(j).Name)
-                                                'paramList.Append(" as ")
                                                 paramList.Append(params(j).ToString())
-                                                'paramList.Append(StripNamespace(params(j).ParameterType.ToString()))
                                             Next j
                                             returnTypeName = StripNamespace(meth.ReturnType.ToString())
                                         Catch ex As Exception
@@ -152,6 +143,7 @@ Namespace Utils
                 Return typeName
             End If
         End Function
+
 
     End Class
 
