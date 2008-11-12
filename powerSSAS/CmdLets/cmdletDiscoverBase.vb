@@ -12,6 +12,9 @@ Namespace Cmdlets
         Private mMajorObjectPath As String()
         Private mServerName As String = ""
 
+        Protected Sub New()
+        End Sub
+
         Public MustOverride ReadOnly Property DiscoverRowset() As String
 
         '<Parameter(HelpMessage:="An Analysis Services Major Object", ParameterSetName:="byMajorObjectPath", Mandatory:=False, Position:=0, ValueFromPipeline:=True)> _
@@ -49,6 +52,10 @@ Namespace Cmdlets
         <Parameter(HelpMessage:="Analysis Services server name", ParameterSetName:="byServer", Position:=0, ValueFromPipeline:=False)> _
         Public Property ServerName() As String
             Get
+                If mServerName.Length = 0 Then
+                    WriteWarning("No server specified, using localhost")
+                    Return "localhost"
+                End If
                 Return mServerName
             End Get
             Set(ByVal value As String)
@@ -65,7 +72,9 @@ Namespace Cmdlets
             End Get
             Set(ByVal value As Microsoft.AnalysisServices.Server)
                 mServer = value
-                mServerName = mServer.Name
+                If Not value Is Nothing Then
+                    mServerName = mServer.Name
+                End If
             End Set
         End Property
 

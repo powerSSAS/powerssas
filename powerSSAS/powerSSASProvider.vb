@@ -5,8 +5,9 @@ Imports System.Management.Automation.Provider
 Imports System.Management.Automation.runspaces
 Imports Microsoft.AnalysisServices
 Imports Gosbell.PowerSSAS.Types
+Imports System.Collections.ObjectModel
 
-<CmdletProvider("powerSSAS", ProviderCapabilities.None)> _
+<CmdletProvider("powerSSAS", ProviderCapabilities.ShouldProcess)> _
 Public Class PowerSSASProvider
     Inherits NavigationCmdletProvider
 
@@ -110,8 +111,9 @@ Public Class PowerSSASProvider
         Dim itm As Object
         Dim isCont As Boolean = False
         itm = GetCurrentItem(path)
-        If TypeOf itm Is ICollection Then
-            Dim itmColl As ICollection = CType(itm, ICollection)
+
+        Dim itmColl As ICollection = TryCast(itm, ICollection)
+        If Not itmColl Is Nothing Then
             For Each o As Object In itmColl
                 If TypeOf o Is ICollection _
                 OrElse TypeOf o Is MajorObject _
@@ -130,7 +132,7 @@ Public Class PowerSSASProvider
             Dim isContainer As Boolean = False
 
             For Each skey As String In col.Keys
-                If TypeOf col.Item(skey).value Is ICollection Then
+                If TypeOf col.Item(skey).Value Is ICollection Then
                     isContainer = True
                 Else
                     isContainer = False
@@ -148,13 +150,14 @@ Public Class PowerSSASProvider
 
     Protected Overrides Sub GetChildNames(ByVal path As String, ByVal returnContainers As System.Management.Automation.ReturnContainers)
         MyBase.GetChildNames(path, returnContainers)
-        'TODO
+        'TODO - GetChildNames
     End Sub
 
     Protected Overrides Function HasChildItems(ByVal path As String) As Boolean
         Dim itm As Object = GetCurrentItem(path)
-        If TypeOf itm Is ICollection Then
-            If CType(itm, ICollection).Count > 0 Then
+        Dim coll As ICollection = TryCast(itm, ICollection)
+        If Not coll Is Nothing Then
+            If coll.Count > 0 Then
                 Return True
             Else
                 Return False
@@ -210,7 +213,7 @@ Public Class PowerSSASProvider
         End Try
     End Function
 
-    Public Function GetXmlaCreate(ByVal majorobj As MajorObject) As Xml.XPath.IXPathNavigable ' Xml.XmlDocument
+    Public Shared Function GetXmlaCreate(ByVal majorobj As MajorObject) As Xml.XPath.IXPathNavigable ' Xml.XmlDocument
         Dim scr As New Microsoft.AnalysisServices.Scripter
         Dim sbOut As New Text.StringBuilder
         Dim xmlOut As Xml.XmlWriter = Xml.XmlWriter.Create(sbOut)
@@ -223,16 +226,34 @@ Public Class PowerSSASProvider
 #Region "Unsupported operations"
     Protected Overrides Sub NewItem(ByVal path As String, ByVal itemTypeName As String, ByVal newItemValue As Object)
         'MyBase.NewItem(path, type, newItemValue)
-        ThrowTerminatingError(New ErrorRecord(New NotImplementedException(path), "powerSSAS.NewItem", ErrorCategory.NotImplemented, Nothing))
+        ThrowTerminatingError(New ErrorRecord(New NotImplementedException("NewItem not implemented (" & path & ")"), "powerSSAS.NewItem", ErrorCategory.NotImplemented, Nothing))
     End Sub
 
     Protected Overrides Sub CopyItem(ByVal path As String, ByVal copyPath As String, ByVal recurse As Boolean)
         'MyBase.CopyItem(path, copyPath, recurse)
-        ThrowTerminatingError(New ErrorRecord(New NotImplementedException(path), "powerSSAS.CopyItem", ErrorCategory.NotImplemented, Nothing))
+        ThrowTerminatingError(New ErrorRecord(New NotImplementedException("CopyItem not implemented (" & path & ")"), "powerSSAS.CopyItem", ErrorCategory.NotImplemented, Nothing))
     End Sub
 
     Protected Overrides Sub RemoveItem(ByVal path As String, ByVal recurse As Boolean)
-        ThrowTerminatingError(New ErrorRecord(New NotImplementedException(path), "powerSSAS.RemoveItem", ErrorCategory.NotImplemented, Nothing))
+        Dim o As Object = GetCurrentItem(path)
+        'Dim w As XmlaWarningCollection
+        'Dim res As ImpactDetailCollection
+
+        Dim mo As MajorObject = TryCast(o, MajorObject)
+        If Not mo Is Nothing Then
+            'TODO: implement Me.ShouldProcess()
+            If recurse Then
+                Me.WriteWarning("Recurse not implemented - Would delete: " & mo.Name & " (ID: " & mo.ID & ")")
+                'mo.Drop(DropOptions.AlterOrDeleteDependents, w, res)
+                'return
+            Else
+                If ShouldProcess(path, "Drop") Then
+                    mo.Drop()
+                End If
+                Return
+            End If
+        End If
+        ThrowTerminatingError(New ErrorRecord(New NotImplementedException("Only Major  (" & path & ")"), "powerSSAS.RemoveItem", ErrorCategory.NotImplemented, Nothing))
     End Sub
 #End Region
 
@@ -270,7 +291,7 @@ Public Class PowerSSASProvider
                     itm = Utils.FunctionLister.ListFunctions(CType(itm, Microsoft.AnalysisServices.Assembly))
                 ElseIf TypeOf itm Is Server _
                 AndAlso CaseInsensitiveMatch(pathChunks(i), "sessions") Then
-                    Dim xds As New Utils.xmlaDiscoverSessions
+                    Dim xds As New Utils.XmlaDiscoverSessions
                     itm = xds.Discover("DISCOVER_SESSIONS", CType(itm, Server).Name, "", "")
                 Else
                     itm = GetProperty(itm, pathChunks(i))
@@ -284,29 +305,29 @@ Public Class PowerSSASProvider
         Return (String.Compare(string1, string2, True, System.Threading.Thread.CurrentThread.CurrentUICulture) = 0)
     End Function
 
-    Private Function GetDriveRootInternal(ByVal path As String) As String
-        Dim driveRoot As String = ""
-        If Me.PSDriveInfo Is Nothing Then
+    'Private Function GetDriveRootInternal(ByVal path As String) As String
+    '    Dim driveRoot As String = ""
+    '    If Me.PSDriveInfo Is Nothing Then
 
-        Else
-            driveRoot = Me.PSDriveInfo.Root
-        End If
+    '    Else
+    '        driveRoot = Me.PSDriveInfo.Root
+    '    End If
 
 
-        Return driveRoot
+    '    Return driveRoot
 
-        'Dim pathBits As String()
-        'If path.EndsWith(PATH_SEPARATOR) Then
-        '    path = path.Substring(0, path.Length - PATH_SEPARATOR.Length)
-        'End If
-        'pathBits = path.Split(CType(PATH_SEPARATOR, Char))
+    '    'Dim pathBits As String()
+    '    'If path.EndsWith(PATH_SEPARATOR) Then
+    '    '    path = path.Substring(0, path.Length - PATH_SEPARATOR.Length)
+    '    'End If
+    '    'pathBits = path.Split(CType(PATH_SEPARATOR, Char))
 
-        'If pathBits.Length >= 2 AndAlso pathBits(1) <> "Databases" Then
-        '    Return pathBits(0) & PATH_SEPARATOR & pathBits(1)
-        'Else
-        '    Return pathBits(0)
-        'End If
-    End Function
+    '    'If pathBits.Length >= 2 AndAlso pathBits(1) <> "Databases" Then
+    '    '    Return pathBits(0) & PATH_SEPARATOR & pathBits(1)
+    '    'Else
+    '    '    Return pathBits(0)
+    '    'End If
+    'End Function
 
     Private Function chunkPath(ByVal path As String) As String()
         Dim s As String = path.Replace((GetAmoDriveInternal(path).Root + PATH_SEPARATOR), "")
@@ -361,11 +382,10 @@ Public Class PowerSSASProvider
             End If
         End If
 
-        If TypeOf obj Is IList Then
-            Dim lst As IList
-            lst = CType(obj, IList)
-            If lst.Count = 1 Then Return lst.Item(0)
 
+        Dim lst As IList = TryCast(obj, IList)
+        If Not lst Is Nothing Then
+            If lst.Count = 1 Then Return lst.Item(0)
 
             Return lst.Item(lst.IndexOf("itemName"))
         ElseIf TypeOf obj Is ICollection Then
@@ -381,18 +401,20 @@ Public Class PowerSSASProvider
         Dim propCol As PropertyInfo()
         propCol = obj.GetType.GetProperties(BindingFlags.Instance Or BindingFlags.Public)
 
-        If TypeOf obj Is ClrAssembly Then
+        Dim clrAss As ClrAssembly = TryCast(obj, ClrAssembly)
+        If Not clrAss Is Nothing Then
             If Not props.ContainsKey("Functions") Then
-                Dim Functions As ICollection(Of FunctionSignature) = Utils.FunctionLister.ListFunctions(CType(obj, ClrAssembly))
+                Dim Functions As ICollection(Of FunctionSignature) = Utils.FunctionLister.ListFunctions(clrAss)
                 props.Add("Functions", New CollectionProperty("Functions", Functions, GetType(FunctionSignature)))
+                Return props
             End If
         End If
 
         If TypeOf obj Is Server Then
             If Not props.ContainsKey("Sessions") Then
-                Dim xds As New Utils.xmlaDiscoverSessions
+                Dim xds As New Utils.XmlaDiscoverSessions
 
-                Dim sess As List(Of Object) = xds.Discover("DISCOVER_SESSIONS", CType(Me.PSDriveInfo, AmoDriveInfo).AmoServer.Name, "", "")
+                Dim sess As Collection(Of Object) = xds.Discover("DISCOVER_SESSIONS", CType(Me.PSDriveInfo, AmoDriveInfo).AmoServer.Name, "", "")
                 props.Add("Sessions", New CollectionProperty("Sessions", sess, GetType(Session)))
             End If
         End If
@@ -409,7 +431,7 @@ Public Class PowerSSASProvider
 
     End Function
 
-    Private Function GetProperty(ByVal obj As Object, ByVal propertyName As String) As Object
+    Private Shared Function GetProperty(ByVal obj As Object, ByVal propertyName As String) As Object
         Dim propInfo As PropertyInfo = obj.GetType.GetProperty(propertyName)
         If propInfo Is Nothing Then
             '\\ GetProperty is case sensitive so we should search the 
@@ -437,7 +459,7 @@ Public Class PowerSSASProvider
     Friend Class AmoDriveInfo
         Inherits System.Management.Automation.PSDriveInfo
         Private mAmoServer As Microsoft.AnalysisServices.Server
-        Private mScripter As Microsoft.AnalysisServices.Scripter
+        'Private mScripter As Microsoft.AnalysisServices.Scripter
 
         Public Sub New(ByVal amoDriveInfo As System.Management.Automation.PSDriveInfo)
             MyBase.New(amoDriveInfo)
@@ -454,15 +476,15 @@ Public Class PowerSSASProvider
         End Property
 
 
-        Public ReadOnly Property ScriptEngine() As Microsoft.AnalysisServices.Scripter
-            Get
-                If mScripter Is Nothing Then
-                    mScripter = New Microsoft.AnalysisServices.Scripter
-                End If
+        'Public ReadOnly Property ScriptEngine() As Microsoft.AnalysisServices.Scripter
+        '    Get
+        '        If mScripter Is Nothing Then
+        '            mScripter = New Microsoft.AnalysisServices.Scripter
+        '        End If
 
-                Return mScripter
-            End Get
-        End Property
+        '        Return mScripter
+        '    End Get
+        'End Property
 
     End Class
 
@@ -486,19 +508,19 @@ Public Class PowerSSASProvider
             mType = propInfo.PropertyType
         End Sub
 
-        Public ReadOnly Property Name() As String
+        <System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")> Public ReadOnly Property Name() As String
             Get
                 Return mName
             End Get
         End Property
 
-        Public ReadOnly Property value() As Object
+        Public ReadOnly Property Value() As Object
             Get
                 Return mValue
             End Get
         End Property
 
-        Public ReadOnly Property ObjectType() As Type
+        <System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")> Public ReadOnly Property ObjectType() As Type
             Get
                 Return mType
             End Get

@@ -82,10 +82,7 @@
 				</Members>
 
 			</MemberSet>
-			<ScriptProperty>
-				<Name>HelloWorld</Name>
-				<GetScriptBlock>"Hello World"</GetScriptBlock>
-			</ScriptProperty>
+
 		</Members>
 	</Type>
 

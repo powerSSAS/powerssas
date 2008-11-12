@@ -200,6 +200,73 @@
 				</TableRowEntries>
 			</TableControl>
 		</View>
+<!-- Lock -->
+		<View>
+			<Name>Gosbell.powerSSAS.Types.Lock</Name>
+			<ViewSelectedBy>
+				<TypeName>Gosbell.powerSSAS.Types.Lock</TypeName>
+			</ViewSelectedBy>
+			<TableControl>
+				<TableHeaders>
+					
+					<TableColumnHeader>
+						<Label>LockObjectType</Label>
+						<Width>22</Width>
+						<Alignment>left</Alignment>
+					</TableColumnHeader>
+					<TableColumnHeader>
+						<Label>LockObjectName</Label>
+						<Width>40</Width>
+						<Alignment>left</Alignment>
+					</TableColumnHeader>
+					<TableColumnHeader>
+						<Label>Lock Type</Label>
+						<Width>12</Width>
+						<Alignment>left</Alignment>
+					</TableColumnHeader>
+					<TableColumnHeader>
+						<Label>Lock Status</Label>
+						<Width>12</Width>
+						<Alignment>left</Alignment>
+					</TableColumnHeader>
+					<TableColumnHeader>
+						<Label>Grant Date</Label>
+						<Width>18</Width>
+						<Alignment>left</Alignment>
+					</TableColumnHeader>
+					<TableColumnHeader>
+						<Label>ID</Label>
+						<Width>37</Width>
+						<Alignment>left</Alignment>
+					</TableColumnHeader>
+				</TableHeaders>
+				<TableRowEntries>
+					<TableRowEntry>
+						<TableColumnItems>
+							<TableColumnItem>
+								<PropertyName>LockObjectType</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>LockObjectName</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>LockTypeDescription</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>LockStatusDescription</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>GrantTime</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>ID</PropertyName>
+							</TableColumnItem>
+						</TableColumnItems>
+					</TableRowEntry>
+				</TableRowEntries>
+			</TableControl>
+		</View>
+
 <!-- PropertyCollection -->
 		<View>
 			<Name>Gosbell.powerSSAS..powerSSASProvider+CollectionProperty</Name>
