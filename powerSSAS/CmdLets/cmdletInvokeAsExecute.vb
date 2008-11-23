@@ -1,8 +1,8 @@
 Imports System.Management.Automation
 Imports Microsoft.AnalysisServices
 
-<Cmdlet("Invoke", "Xmla", SupportsShouldProcess:=True)> _
-Public Class cmdletInvokeXmla
+<Cmdlet("Invoke", "AsExecute", SupportsShouldProcess:=True)> _
+Public Class cmdletInvokeAsExecute
     Inherits Cmdlet
 
     Private mServerName As String = ""
