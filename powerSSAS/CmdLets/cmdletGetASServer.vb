@@ -4,12 +4,11 @@ Imports Microsoft.AnalysisServices.Xmla
 Imports Microsoft.AnalysisServices
 
 Namespace Cmdlets
-    <Cmdlet(VerbsCommon.Get, "ASServer", SupportsShouldProcess:=True)> _
-    Public Class cmdletGetASServer
+    <Cmdlet(VerbsCommon.Get, "ASServer")> _
+    Public Class CmdletGetASServer
         Inherits Cmdlet
 
         Private mServerName As String = ""
-        Private svr As New Server()
 
         <Parameter(HelpMessage:="Analysis Services server name", Position:=0, ValueFromPipeline:=True, Mandatory:=True, ParameterSetName:="Default")> _
         Public Property ServerName() As String
@@ -22,8 +21,8 @@ Namespace Cmdlets
         End Property
 
         Protected Overrides Sub ProcessRecord()
-            svr.Connect(mServerName)
-            WriteObject(svr)
+            'svr.Connect(mServerName)
+            WriteObject(ConnectionFactory.ConnectToServer(mServerName))
         End Sub
 
         'Protected Overrides Sub EndProcessing()
@@ -31,12 +30,12 @@ Namespace Cmdlets
         '    'svr.Disconnect()
         'End Sub
 
-        Protected Overrides Sub StopProcessing()
-            MyBase.StopProcessing()
-            If svr.Connected Then
-                svr.Disconnect()
-            End If
-        End Sub
+        'Protected Overrides Sub StopProcessing()
+        '    MyBase.StopProcessing()
+        '    If svr.Connected Then
+        '        svr.Disconnect()
+        '    End If
+        'End Sub
 
     End Class
 End Namespace

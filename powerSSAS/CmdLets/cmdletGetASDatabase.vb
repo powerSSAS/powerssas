@@ -4,11 +4,11 @@ Imports Microsoft.AnalysisServices.Xmla
 Imports Microsoft.AnalysisServices
 
 Namespace Cmdlets
-    <Cmdlet(VerbsCommon.Get, "ASDatabase", SupportsShouldProcess:=True, DefaultParameterSetName:="byObject")> _
-    Public Class cmdletGetASDatabase
+    <Cmdlet(VerbsCommon.Get, "ASDatabase", DefaultParameterSetName:="byObject")> _
+    Public Class CmdletGetASDatabase
         Inherits Cmdlet
 
-        Private mSvr As New Server()
+        Private mSvr As Server
 
         Private mServerName As String = ""
         <Parameter(ParameterSetName:="byName", HelpMessage:="Analysis Services server name", Position:=0, ValueFromPipeline:=False)> _
@@ -46,13 +46,13 @@ Namespace Cmdlets
         End Property
 
 
-        Protected Overrides Sub EndProcessing()
-            '// if the server was connected inside this cmdlet, we should disconnect it.
-            If mServer Is Nothing AndAlso mServerName.Length > 0 Then
-                mSvr.Disconnect()
-            End If
-            MyBase.EndProcessing()
-        End Sub
+        'Protected Overrides Sub EndProcessing()
+        '    '// if the server was connected inside this cmdlet, we should disconnect it.
+        '    If mServer Is Nothing AndAlso mServerName.Length > 0 Then
+        '        mSvr.Disconnect()
+        '    End If
+        '    MyBase.EndProcessing()
+        'End Sub
 
         Protected Overrides Sub ProcessRecord()
 
@@ -61,14 +61,16 @@ Namespace Cmdlets
                 mSvr = mServer
             ElseIf mServer Is Nothing AndAlso mServerName.Length > 0 Then
                 '// if just the name is passed in, then we need to connect
-                mSvr.Connect(mServerName)
+                mSvr = ConnectionFactory.ConnectToServer(mServerName)
             Else
                 WriteError(New ErrorRecord(New ArgumentException("You must pass in a server object or server name"), "MissingParam", ErrorCategory.InvalidArgument, Nothing))
             End If
 
             If mDatabaseName.Length = 0 Then
                 '// if no specific database is requested, return the whole collection.
-                WriteObject(mSvr.Databases)
+                For Each db As Database In mSvr.Databases
+                    WriteObject(db)
+                Next db
             Else
                 If WildcardPattern.ContainsWildcardCharacters(mDatabaseName) Then
                     '// if we have a wildcard pattern, search for matches

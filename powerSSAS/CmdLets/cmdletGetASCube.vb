@@ -4,11 +4,13 @@ Imports Microsoft.AnalysisServices.Xmla
 Imports Microsoft.AnalysisServices
 
 Namespace Cmdlets
-    <Cmdlet(VerbsCommon.Get, "ASCube", SupportsShouldProcess:=True, DefaultParameterSetName:="byObject")> _
-    Public Class cmdletGetASCube
+
+
+    <Cmdlet(VerbsCommon.Get, "ASCube", DefaultParameterSetName:="byObject")> _
+    Public Class CmdletGetASCube
         Inherits Cmdlet
 
-        Private mSvr As New Server()
+        Private mSvr As Server
         Private mDB As Database
 
         Private mServerName As String = ""
@@ -34,6 +36,18 @@ Namespace Cmdlets
             End Set
         End Property
 
+        Private mCubeName As String = ""
+        <[Alias]("Cube")> _
+        <Parameter(ParameterSetName:="byName", HelpMessage:="Analysis Services cube name", Position:=2, ValueFromPipeline:=False)> _
+        Public Property CubeName() As String
+            Get
+                Return mCubeName
+            End Get
+            Set(ByVal value As String)
+                mCubeName = value
+            End Set
+        End Property
+
         Private mParamDB As Microsoft.AnalysisServices.Database
         <[Alias]("Server")> _
         <Parameter(ParameterSetName:="byObject", HelpMessage:="Analysis Services server object", Position:=0, ValueFromPipeline:=True)> _
@@ -46,15 +60,6 @@ Namespace Cmdlets
             End Set
         End Property
 
-
-        Protected Overrides Sub EndProcessing()
-            '// if the server was connected inside this cmdlet, we should disconnect it.
-            If mParamDB Is Nothing AndAlso mServerName.Length > 0 Then
-                mSvr.Disconnect()
-            End If
-            MyBase.EndProcessing()
-        End Sub
-
         Protected Overrides Sub ProcessRecord()
 
             If mParamDB IsNot Nothing Then
@@ -62,31 +67,31 @@ Namespace Cmdlets
                 mDB = mParamDB
             ElseIf mParamDB Is Nothing AndAlso mServerName.Length > 0 Then
                 '// if just the name is passed in, then we need to connect
-                mSvr.Connect(mServerName)
+                mSvr = ConnectionFactory.ConnectToServer(mServerName)
                 mDB = mSvr.Databases.GetByName(mDatabaseName)
             Else
                 WriteError(New ErrorRecord(New ArgumentException("You must pass in a Database object or server & database name"), "MissingParam", ErrorCategory.InvalidArgument, Nothing))
             End If
 
-            'If mDatabaseName.Length = 0 Then
-
-            '// if no specific cube is requested, return the whole collection.
-            WriteObject(mDB.Cubes)
-
-            'Else
-            'If WildcardPattern.ContainsWildcardCharacters(mDatabaseName) Then
-            '    '// if we have a wildcard pattern, search for matches
-            '    Dim wc As New System.Management.Automation.WildcardPattern(mDatabaseName, WildcardOptions.IgnoreCase)
-            '    For Each db As Database In mSvr.Databases
-            '        If wc.IsMatch(db.Name) Then
-            '            WriteObject(db)
-            '        End If
-            '    Next
-            'Else
-            '    '// if a single database has been selected, try and return that.
-            '    WriteObject(mSvr.Databases.GetByName(mDatabaseName))
-            'End If
-            'End If
+            If mCubeName.Length = 0 Then
+                '// if no specific cube is requested, return the whole collection.
+                For Each c As Cube In mDB.Cubes
+                    WriteObject(c)
+                Next c
+            Else
+                If WildcardPattern.ContainsWildcardCharacters(mCubeName) Then
+                    '// if we have a wildcard pattern, search for matches
+                    Dim wc As New System.Management.Automation.WildcardPattern(mCubeName, WildcardOptions.IgnoreCase)
+                    For Each c As Cube In mDB.Cubes
+                        If wc.IsMatch(c.Name) Then
+                            WriteObject(c)
+                        End If
+                    Next
+                Else
+                    '// if a single cube has been selected, try and return that.
+                    WriteObject(mDB.Cubes.GetByName(mCubeName))
+                End If
+            End If
         End Sub
 
     End Class

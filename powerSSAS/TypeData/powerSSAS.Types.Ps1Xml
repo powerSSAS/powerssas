@@ -66,22 +66,14 @@
 		</Members>
 	</Type>
 	<Type>
-		<Name>Gosbell.PowerSSAS.PowerSSASProvider+CollectionProperty</Name>
+		<Name>Microsoft.AnalysisServices.Server</Name>
 		<Members>
-			<MemberSet>
-				<Name>PSStandardMembers</Name>
-				<Members>
-					<PropertySet>
-						<Name>DefaultDisplayPropertySet</Name>
-						<ReferencedProperties>
-							<Name>Name</Name>
-							<Name>Value</Name>
-							<Name>ObjectType</Name>
-						</ReferencedProperties>
-					</PropertySet>
-				</Members>
-
-			</MemberSet>
+			<ScriptProperty>
+				<Name>Locks</Name>
+				<GetScriptBlock>
+					get-aslock -ServerName $this.Name 
+				</GetScriptBlock>
+			</ScriptProperty>
 
 		</Members>
 	</Type>
