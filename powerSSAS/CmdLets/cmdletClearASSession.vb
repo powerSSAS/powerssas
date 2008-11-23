@@ -50,7 +50,7 @@ Namespace Cmdlets
         End Property
 
 
-        Private mSession() As PowerSSAS.Types.Session
+        Private mSession As PowerSSAS.Types.Session()
         <AllowNull()> _
         <Parameter(HelpMessage:="Analysis Services server name", Position:=0, ParameterSetName:="bySession", ValueFromPipeline:=True)> _
         Public Property InputObject() As PowerSSAS.Types.Session()

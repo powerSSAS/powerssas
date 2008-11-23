@@ -6,9 +6,12 @@ Imports System.Reflection
 Imports Gosbell.PowerSSAS.Types
 
 Namespace Utils
-    Public Class FunctionLister
+    Public NotInheritable Class FunctionLister
 
-        Private Shared lstFuncs As List(Of FunctionSignature) = Nothing
+        Private Sub New()
+        End Sub
+
+        Private Shared lstFuncs As List(Of FunctionSignature)
 
         Public Shared Function ListFunctions(ByVal ass As Microsoft.AnalysisServices.Assembly) As ICollection(Of FunctionSignature)
             Return getFunctionList(ass)
@@ -19,8 +22,9 @@ Namespace Utils
             If lstFuncs Is Nothing Then
                 lstFuncs = New List(Of FunctionSignature)
 
-                If TypeOf ass Is ClrAssembly Then '// we can only use reflection against .Net assemblies
-                    Dim clrAss As ClrAssembly = CType(ass, ClrAssembly)
+                Dim clrAss As ClrAssembly = TryCast(ass, ClrAssembly)
+                If Not clrAss Is Nothing Then '// we can only use reflection against .Net assemblies
+
                     For Each f As ClrAssemblyFile In clrAss.Files '// an assembly can have multiple files
 
                         '// We only want to get the "main" asembly file and only files which have data
