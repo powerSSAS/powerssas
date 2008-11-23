@@ -1,7 +1,7 @@
 Imports System.Management.Automation
 
 Namespace Cmdlets
-    <Cmdlet(VerbsCommunications.Send, "XmlaDiscover", SupportsShouldProcess:=True)> _
+    <Cmdlet("Invoke", "AsDiscover", SupportsShouldProcess:=True)> _
     Public Class CmdletSendXmlaDiscover
         Inherits Cmdlet
 

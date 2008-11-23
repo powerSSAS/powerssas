@@ -4,7 +4,7 @@ Imports Gosbell.PowerSSAS.PowerSSASProvider
 
 Namespace Cmdlets
     <Cmdlet(VerbsCommon.Get, "ASXmlaScript")> _
-    Public Class Scripter
+    Public Class cmdletGetAsXmlaScript
         Inherits PSCmdlet
 
         Private mMajorObjectPath As String()
