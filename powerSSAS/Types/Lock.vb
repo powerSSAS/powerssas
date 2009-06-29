@@ -1,5 +1,4 @@
 Imports System.Xml
-Imports Microsoft.AnalysisServices.Xmla.XmlaClient
 Imports Microsoft.AnalysisServices
 
 Namespace Types

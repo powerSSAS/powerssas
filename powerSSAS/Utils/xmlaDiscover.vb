@@ -1,7 +1,7 @@
 Imports System.Xml
 Imports System.Management.Automation
-Imports Microsoft.AnalysisServices.Xmla
 Imports System.Globalization
+Imports Microsoft.AnalysisServices.AdomdClient
 
 Namespace Utils
 
@@ -20,76 +20,101 @@ Namespace Utils
             End Get
         End Property
 
-        Public Sub Discover(ByVal command As String, ByVal serverName As String, ByVal restrictions As String, ByVal properties As String, ByVal outputCallback As OutputObjectCallback)
-            Discover(command, serverName, restrictions, properties, outputCallback, False)
-        End Sub
+        'Public Sub Discover(ByVal command As String, ByVal serverName As String, ByVal restrictions As AdomdRestrictionCollection, ByVal databaseName As String, ByVal outputCallback As OutputObjectCallback)
+        '    Discover(command, serverName, restrictions, databaseName, outputCallback, False)
+        'End Sub
 
-        Public Sub Discover(ByVal command As String, ByVal serverName As String, ByVal restrictions As String, ByVal properties As String, ByVal outputCallback As OutputObjectCallback, ByVal rawResultSet As Boolean)
+        Public Sub Discover(ByVal command As String, ByVal serverName As String, ByVal restrictions As AdomdRestrictionCollection, ByVal databaseName As String, ByVal outputCallback As OutputObjectCallback) ', ByVal rawResultSet As Boolean)
             If outputCallback Is Nothing Then
                 Throw New ArgumentException("The ouputCallback argument must be a valid delegate")
             End If
 
             If Not command Is Nothing Then
-                Dim x As New Microsoft.AnalysisServices.Xmla.XmlaClient
-                x.Connect("data source=" & serverName)
+                'Dim x As New Microsoft.AnalysisServices.Xmla.XmlaClient
+                'x.Connect("data source=" & serverName)
+                Dim ds As DataSet
+                Dim connStr As String = "Data Source=" & serverName
+                If databaseName.Length > 0 Then
+                    connStr &= ";Initial Catalog=" & databaseName
+                End If
+                Dim conn As New AdomdConnection(connStr)
                 Try
                     Dim res As String = ""
                     If command.Contains("<") Then
-                        res = x.Send(command, Nothing)
+                        'res = x.Send(command, Nothing)
+                        Throw (New ArgumentException("Invalid command Schema Rowset name: " & command))
                     Else
-                        x.Discover(command.ToUpper(), restrictions, properties, res, False, False, False)
+                        conn.Open()
+                        ds = conn.GetSchemaDataSet(command.ToUpper(), restrictions)
                     End If
-                    x.Disconnect(True)
-                    If rawResultSet Then
-                        outputCallback(res)
-                    Else
-                        ProcessXmlaResult(serverName, res, outputCallback)
-                    End If
+
+                    'If rawResultSet Then
+                    '    outputCallback(res)
+                    'Else
+                    ProcessDataSet(serverName, ds, outputCallback)
+                    'End If
                 Finally
-                    x.Disconnect()
+                    conn.Close()
                 End Try
             End If
         End Sub
 
+        Private Sub ProcessDataSet(ByVal serverName As String, ByVal ds As DataSet, ByVal OutputCallback As OutputObjectCallback)
+            For Each dr As DataRow In ds.Tables(0).Rows
+
+                OutputCallback(GetPSObject(dr, serverName))
+            Next
+        End Sub
 
         '// This routine is fairly "brute force", creating an XmlDocument and 
         '// then iterating through the nodes
-        Private Sub ProcessXmlaResult(ByVal serverName As String, ByVal xmlaResult As String, ByVal OutputCallback As OutputObjectCallback)
+        'Private Sub ProcessXmlaResult(ByVal serverName As String, ByVal xmlaResult As String, ByVal OutputCallback As OutputObjectCallback)
 
-            Dim rowSchema As New Dictionary(Of String, String)
-            Dim doc As XmlDocument = New XmlDocument()
-            doc.LoadXml(xmlaResult)
+        '    Dim rowSchema As New Dictionary(Of String, String)
+        '    Dim doc As XmlDocument = New XmlDocument()
+        '    doc.LoadXml(xmlaResult)
 
-            '//               return         root       schema/rows       Look for element with attribute "name" = row
-            '//                  ^             ^             ^             ^
-            '//xmlDom.ChildNodes[0].ChildNodes[0].ChildNodes[0].ChildNodes[0].Attributes.Count
-            For Each n As XmlNode In doc.ChildNodes(0).ChildNodes(0).ChildNodes
-                If ((n.NodeType = XmlNodeType.Element) AndAlso (n.LocalName = "schema")) Then
-                    rowSchema = buildPSObjectFromSchema(n)
+        '    '//               return         root       schema/rows       Look for element with attribute "name" = row
+        '    '//                  ^             ^             ^             ^
+        '    '//xmlDom.ChildNodes[0].ChildNodes[0].ChildNodes[0].ChildNodes[0].Attributes.Count
+        '    For Each n As XmlNode In doc.ChildNodes(0).ChildNodes(0).ChildNodes
+        '        If ((n.NodeType = XmlNodeType.Element) AndAlso (n.LocalName = "schema")) Then
+        '            rowSchema = buildPSObjectFromSchema(n)
+        '        End If
+        '        If ((n.NodeType = XmlNodeType.Element) AndAlso (n.LocalName = "row")) Then
+        '            OutputCallback(GetPSObject(rowSchema, serverName, n))
+        '        End If
+        '        If Me.Stopping Then
+        '            Exit For
+        '        End If
+        '    Next 'n            
+
+        'End Sub
+
+
+        Public Function Discover(ByVal command As String, ByVal serverName As String, ByVal restrictions As AdomdRestrictionCollection, ByVal databaseName As String) As System.Collections.ObjectModel.Collection(Of Object)
+            'Dim x As New Microsoft.AnalysisServices.Xmla.XmlaClient
+            'x.Connect("data source=" & serverName)
+            Dim conn As New Microsoft.AnalysisServices.AdomdClient.AdomdConnection("Data Source=" & serverName)
+            conn.Open()
+            Dim ds As DataSet
+            Try
+                Dim res As String = ""
+                If command.Contains("<") Then
+                    'res = x.Send(command, Nothing)
+                    Throw New ArgumentException("Invalid Schema Rowset: " & command)
+                Else
+                    ds = conn.GetSchemaDataSet(command, restrictions)
                 End If
-                If ((n.NodeType = XmlNodeType.Element) AndAlso (n.LocalName = "row")) Then
-                    OutputCallback(GetPSObject(rowSchema, serverName, n))
-                End If
-                If Me.Stopping Then
-                    Exit For
-                End If
-            Next 'n            
+            Finally
+                conn.Close()
+            End Try
+            Return GetObjectListFromDataSet(serverName, ds)
+        End Function
 
-        End Sub
-
-
-        Public Function Discover(ByVal command As String, ByVal serverName As String, ByVal restrictions As String, ByVal properties As String) As System.Collections.ObjectModel.Collection(Of Object)
-            Dim x As New Microsoft.AnalysisServices.Xmla.XmlaClient
-            x.Connect("data source=" & serverName)
-            Dim res As String = ""
-            If command.Contains("<") Then
-                res = x.Send(command, Nothing)
-            Else
-                x.Discover(command, restrictions, properties, res, False, False, False)
-            End If
-            x.Disconnect(True)
-
-            Return GetObjectListFromXmla(serverName, res)
+        Private Function GetObjectListFromDataSet(ByVal serverName As String, ByVal ds As DataSet) As System.Collections.ObjectModel.Collection(Of Object)
+            'TODO Implement GetObjectListFromDataSet
+            Throw New NotImplementedException("GetObjectListFromDataSet")
         End Function
 
         '// This routine is fairly "brute force", creating an XmlDocument and 
@@ -151,6 +176,14 @@ Namespace Utils
             Next
 
             Return schema
+        End Function
+
+        Protected Overridable Function GetPSObject(ByVal dr As DataRow, ByVal server As String) As Object
+            Dim pso As New PSObject()
+            For Each dc As DataColumn In dr.Table.Columns
+                pso.Properties.Add(New PSNoteProperty(NormalizeName(dc.ColumnName), dr.Item(dc.Ordinal)))
+            Next
+            Return pso
         End Function
 
         Protected Overridable Function GetPSObject(ByVal rowSchema As Dictionary(Of String, String), ByVal server As String, ByVal row As XmlNode) As Object

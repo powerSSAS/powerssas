@@ -5,12 +5,12 @@ Imports Gosbell.PowerSSAS.PowerSSASProvider
 'Imports System.Globalization
 
 Namespace Cmdlets
-    <Cmdlet(VerbsCommon.Get, "ASCubePermission", DefaultParameterSetName:="byObject")> _
+    <Cmdlet(VerbsCommon.Get, "ASCubePermission")> _
     Public Class CmdletGetASCubePermission
         Inherits Cmdlet
 
         Private mRole As Role
-        <Parameter(HelpMessage:="The Role for which to find CubePermissions")> _
+        <Parameter(HelpMessage:="The Role for which to find CubePermissions", ValueFromPipeline:=True, Position:=0)> _
         Public Property RoleObject() As Role
             Get
                 Return mRole
@@ -61,7 +61,7 @@ Namespace Cmdlets
             For Each c As Cube In db.Cubes
                 WriteObject(c.CubePermissions.GetByRole(mRole.ID))
             Next
-            
+
         End Sub
 
     End Class

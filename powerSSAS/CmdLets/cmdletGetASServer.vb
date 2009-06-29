@@ -1,6 +1,5 @@
 ﻿Imports System.Management.Automation
 Imports System.Xml
-Imports Microsoft.AnalysisServices.Xmla
 Imports Microsoft.AnalysisServices
 
 Namespace Cmdlets

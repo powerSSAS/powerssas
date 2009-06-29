@@ -1,22 +1,23 @@
 Imports System.Management.Automation
+Imports Microsoft.AnalysisServices.AdomdClient
 
 Namespace Cmdlets
-    <Cmdlet("Invoke", "AsDiscover", SupportsShouldProcess:=True)> _
+    <Cmdlet("Invoke", "AsDiscover")> _
     Public Class CmdletSendXmlaDiscover
         Inherits Cmdlet
 
         Private xd As New Utils.XmlaDiscover()
 
-        Private mRaw As SwitchParameter
-        <Parameter(HelpMessage:="Outputs the results as a raw string")> _
-        Public Property Raw() As SwitchParameter
-            Get
-                Return mRaw
-            End Get
-            Set(ByVal value As SwitchParameter)
-                mRaw = value
-            End Set
-        End Property
+        'Private mRaw As SwitchParameter
+        '<Parameter(HelpMessage:="Outputs the results as a raw string")> _
+        'Public Property Raw() As SwitchParameter
+        '    Get
+        '        Return mRaw
+        '    End Get
+        '    Set(ByVal value As SwitchParameter)
+        '        mRaw = value
+        '    End Set
+        'End Property
 
         Private mServerName As String = ""
         <Parameter(HelpMessage:="Analysis Services server name", Mandatory:=True, ParameterSetName:="Default", Position:=0, ValueFromPipeline:=True)> _
@@ -41,35 +42,44 @@ Namespace Cmdlets
             End Set
         End Property
 
-        Private mRestrictions As String = ""
+        Private mRestrictions As AdomdRestrictionCollection
         <Parameter(Mandatory:=False)> _
-        Public Property Restrictions() As String
+        Public Property Restrictions() As AdomdRestrictionCollection
             Get
                 Return mRestrictions
             End Get
-            Set(ByVal value As String)
+            Set(ByVal value As AdomdRestrictionCollection)
                 mRestrictions = value
             End Set
         End Property
 
-        Private mProperties As String = ""
-        <Parameter(Mandatory:=False)> _
-        Public Property Properties() As String
+        'Private mProperties As String = ""
+        '<Parameter(Mandatory:=False)> _
+        'Public Property Properties() As String
+        '    Get
+        '        Return mProperties
+        '    End Get
+        '    Set(ByVal value As String)
+        '        mProperties = value
+        '    End Set
+        'End Property
+        Private mDatabaseName As String = ""
+        Public Property DatabaseName() As String
             Get
-                Return mProperties
+                Return mDatabaseName
             End Get
             Set(ByVal value As String)
-                mProperties = value
+                mDatabaseName = value
             End Set
         End Property
 
         Protected Overrides Sub ProcessRecord()
             Try
-                If mRaw.IsPresent Then
-                    xd.Discover(RowsetName, ServerName, Restrictions, Properties, AddressOf OutputObject, True)
-                Else
-                    xd.Discover(RowsetName, ServerName, Restrictions, Properties, AddressOf OutputObject)
-                End If
+                'If mRaw.IsPresent Then
+                '    xd.Discover(RowsetName, ServerName, Restrictions, Properties, AddressOf OutputObject, True)
+                'Else
+                xd.Discover(RowsetName, ServerName, Restrictions, DatabaseName, AddressOf OutputObject)
+                'End If
             Catch ex As PipelineStoppedException
                 'WriteError(New ErrorRecord(New OperationCanceledException("The operation has been cancelled"), "Cancelled", ErrorCategory.OperationStopped, Me))
             End Try

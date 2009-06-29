@@ -1,4 +1,4 @@
-﻿Imports System
+Imports System
 Imports System.Reflection
 Imports System.Runtime.InteropServices
 
@@ -12,7 +12,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("A Powershell provider for Microsoft SQL Server Analysis Services")> 
 <Assembly: AssemblyCompany("Darren Gosbell (http://geekswithblogs.net/darrengosbell)")> 
 <Assembly: AssemblyProduct("PowerSSAS")> 
-<Assembly: AssemblyCopyright("Copyright © Darren Gosbell 2007")> 
+<Assembly: AssemblyCopyright("Copyright - Darren Gosbell 2007")> 
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)> 
@@ -32,5 +32,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("0.2.2.2")> 
-<Assembly: AssemblyFileVersion("0.2.2.2")> 
+<Assembly: AssemblyVersion("0.2.0.0")> 
+<Assembly: AssemblyFileVersion("0.2.0.0")> 

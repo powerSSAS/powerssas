@@ -17,35 +17,25 @@ Namespace Cmdlets
 
         Public MustOverride ReadOnly Property DiscoverRowset() As String
 
-        '<Parameter(HelpMessage:="An Analysis Services Major Object", ParameterSetName:="byMajorObjectPath", Mandatory:=False, Position:=0, ValueFromPipeline:=True)> _
-        'Public Property MajorObjectPath() As String()
-        '    Get
-        '        Return mMajorObjectPath
-        '    End Get
-        '    Set(ByVal value As String())
-        '        mMajorObjectPath = value
-        '    End Set
-        'End Property
-
-        Private mXmlaRestrictions As String = ""
+        Private mXmlaRestrictions As New AdomdClient.AdomdRestrictionCollection
         <Parameter(HelpMessage:="Xmla Restrictions", Mandatory:=False, ParameterSetName:="byServer", Position:=1, ValueFromPipeline:=False)> _
-        Public Overridable Property XmlaRestrictions() As String
+        Public Overridable Property XmlaRestrictions() As AdomdClient.AdomdRestrictionCollection
             Get
                 Return mXmlaRestrictions
             End Get
-            Set(ByVal value As String)
+            Set(ByVal value As AdomdClient.AdomdRestrictionCollection)
                 mXmlaRestrictions = value
             End Set
         End Property
 
-        Private mXmlaProperties As String = ""
+        Private mDatabaseName As String = ""
         <Parameter(HelpMessage:="Xmla Properties", Mandatory:=False, ParameterSetName:="byServer", Position:=2, ValueFromPipeline:=False)> _
-         Public Overridable Property XmlaProperties() As String
+        Protected Overridable Property ConnectionDatabaseName() As String
             Get
-                Return mXmlaProperties
+                Return mDatabaseName
             End Get
             Set(ByVal value As String)
-                mXmlaProperties = value
+                mDatabaseName = value
             End Set
         End Property
 
@@ -114,7 +104,7 @@ Namespace Cmdlets
         Protected Overrides Sub ProcessRecord()
             Dim xd As New Utils.XmlaDiscover()
 
-            xd.Discover(DiscoverRowset, ServerName, XmlaRestrictions, XmlaProperties, AddressOf OutputObject)
+            xd.Discover(DiscoverRowset, ServerName, XmlaRestrictions, ConnectionDatabaseName, AddressOf OutputObject)
         End Sub
 
         Protected Overridable Sub OutputObject(ByVal output As Object)

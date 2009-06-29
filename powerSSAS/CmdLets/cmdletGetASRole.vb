@@ -5,11 +5,11 @@ Imports System.Xml
 Imports System.Globalization
 
 Namespace Cmdlets
-    <Cmdlet(VerbsCommon.Get, "ASRole", DefaultParameterSetName:="byObject")> _
+    <Cmdlet(VerbsCommon.Get, "ASRole")> _
     Public Class CmdletGetASRole
         Inherits Cmdlet
-        
-        Private mRoleID As String
+
+        Private mRoleID As String = ""
         <Parameter(HelpMessage:="Only returns the Role with the specified RoleID")> _
         Public Property RoleID() As String
             Get
@@ -43,7 +43,7 @@ Namespace Cmdlets
         End Property
 
         Private mDatabaseName As String = ""
-        <Parameter(HelpMessage:="The name of the database to query for the role information", position:=0)> _
+        <Parameter(HelpMessage:="The name of the database to query for the role information", position:=1)> _
         Public Property DatabaseName() As String
             Get
                 Return mDatabaseName
