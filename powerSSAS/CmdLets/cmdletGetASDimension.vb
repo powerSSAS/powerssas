@@ -1,10 +1,9 @@
 ﻿Imports System.Management.Automation
 Imports System.Xml
-Imports Microsoft.AnalysisServices.Xmla
 Imports Microsoft.AnalysisServices
 
 Namespace Cmdlets
-    <Cmdlet(VerbsCommon.Get, "ASDimension", DefaultParameterSetName:="byObject")> _
+    <Cmdlet(VerbsCommon.Get, "ASDimension", DefaultParameterSetName:="byDbObject")> _
     Public Class CmdletGetASDimension
         Inherits Cmdlet
 

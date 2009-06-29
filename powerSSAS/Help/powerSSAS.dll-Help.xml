@@ -45,31 +45,12 @@
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >PermissionSet</command:parameterValue>
 			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "5" >
-				<maml:name>DatabaseName</maml:name>
-				<maml:description>
-					<maml:para>If the assembly is to be loaded under a particular database you can specify it's name with this parameter.</maml:para>
-				</maml:description>
-			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
-			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "4" >
-				<maml:name>Server</maml:name>
+				<maml:name>Database</maml:name>
 				<maml:description>
-					<maml:para>This is the server object for where the assembly is to be loaded. You can either use pass in a server object or use the ServerName parameter.</maml:para>
+					<maml:para>This is the Database object to which you want to add the assembly</maml:para>
 				</maml:description>
-			<command:parameterValue required="true" variableLength = "false" >Server</command:parameterValue>
-			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
-				<maml:name>WhatIf</maml:name>
-				<maml:description>
-					<maml:para></maml:para>
-				</maml:description>
-			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
-				<maml:name>Confirm</maml:name>
-				<maml:description>
-					<maml:para></maml:para>
-				</maml:description>
+			<command:parameterValue required="true" variableLength = "false" >Database</command:parameterValue>
 			</command:parameter>
 		</command:syntaxItem>
 		<command:syntaxItem>
@@ -95,24 +76,19 @@
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >PermissionSet</command:parameterValue>
 			</command:parameter>
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "5" >
+				<maml:name>DatabaseName</maml:name>
+				<maml:description>
+					<maml:para>If the assembly is to be loaded under a particular database you can specify it's name with this parameter.</maml:para>
+				</maml:description>
+			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
+			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "4" >
-				<maml:name>Database</maml:name>
+				<maml:name>Server</maml:name>
 				<maml:description>
-					<maml:para>This is the Database object to which you want to add the assembly</maml:para>
+					<maml:para>This is the server object for where the assembly is to be loaded. You can either use pass in a server object or use the ServerName parameter.</maml:para>
 				</maml:description>
-			<command:parameterValue required="true" variableLength = "false" >Database</command:parameterValue>
-			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
-				<maml:name>WhatIf</maml:name>
-				<maml:description>
-					<maml:para></maml:para>
-				</maml:description>
-			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
-				<maml:name>Confirm</maml:name>
-				<maml:description>
-					<maml:para></maml:para>
-				</maml:description>
+			<command:parameterValue required="true" variableLength = "false" >Server</command:parameterValue>
 			</command:parameter>
 		</command:syntaxItem>
 		<command:syntaxItem>
@@ -151,18 +127,6 @@
 					<maml:para>This is the name of the server to which the assembly is to be loaded. You can either use this parameter or pass a Server object to the Server parameter.</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
-			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
-				<maml:name>WhatIf</maml:name>
-				<maml:description>
-					<maml:para></maml:para>
-				</maml:description>
-			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
-				<maml:name>Confirm</maml:name>
-				<maml:description>
-					<maml:para></maml:para>
-				</maml:description>
 			</command:parameter>
 		</command:syntaxItem>
 	</command:syntax>
@@ -203,6 +167,18 @@
 			</dev:type>
 			<dev:defaultValue></dev:defaultValue>
 		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="4">
+			<maml:name>Database</maml:name>
+			<maml:description>
+				<maml:para>This is the Database object to which you want to add the assembly</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">Database</command:parameterValue>
+			<dev:type>
+				<maml:name>Database</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="5">
 			<maml:name>DatabaseName</maml:name>
 			<maml:description>
@@ -223,40 +199,6 @@
 			<command:parameterValue required="true" variableLength="false">Server</command:parameterValue>
 			<dev:type>
 				<maml:name>Server</maml:name>
-				<maml:uri/>
-			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
-		</command:parameter>
-		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
-			<maml:name>WhatIf</maml:name>
-			<maml:description>
-				<maml:para></maml:para>
-			</maml:description>
-			<dev:type>
-				<maml:name>SwitchParameter</maml:name>
-				<maml:uri/>
-			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
-		</command:parameter>
-		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
-			<maml:name>Confirm</maml:name>
-			<maml:description>
-				<maml:para></maml:para>
-			</maml:description>
-			<dev:type>
-				<maml:name>SwitchParameter</maml:name>
-				<maml:uri/>
-			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
-		</command:parameter>
-		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="4">
-			<maml:name>Database</maml:name>
-			<maml:description>
-				<maml:para>This is the Database object to which you want to add the assembly</maml:para>
-			</maml:description>
-			<command:parameterValue required="true" variableLength="false">Database</command:parameterValue>
-			<dev:type>
-				<maml:name>Database</maml:name>
 				<maml:uri/>
 			</dev:type>
 			<dev:defaultValue></dev:defaultValue>
@@ -598,7 +540,7 @@ C:\PS&gt;			</maml:introduction>
 	<command:details>
 		<command:name>Get-ASConnection</command:name>
 		<maml:description>
-			<maml:para>Gets a list of all the SSAS connections. for the specified server</maml:para>
+			<maml:para>Gets a collection of all the SSAS connections. for the specified server</maml:para>
 		</maml:description>
 		<maml:copyright>
            <maml:para />
@@ -623,9 +565,9 @@ C:\PS&gt;			</maml:introduction>
 			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "3" >
-				<maml:name>XmlaProperties</maml:name>
+				<maml:name>DatabaseName</maml:name>
 				<maml:description>
-					<maml:para>An XML fragment that contains Properties to be passed to the DISCOVER_CONNECTIONS call.</maml:para>
+					<maml:para>The name of the Database</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
 			</command:parameter>
@@ -669,9 +611,9 @@ C:\PS&gt;			</maml:introduction>
 			<dev:defaultValue></dev:defaultValue>
 		</command:parameter>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="3">
-			<maml:name>XmlaProperties</maml:name>
+			<maml:name>DatabaseName</maml:name>
 			<maml:description>
-				<maml:para>An XML fragment that contains Properties to be passed to the DISCOVER_CONNECTIONS call.</maml:para>
+				<maml:para>The name of the Database</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
@@ -945,6 +887,134 @@ C:\PS&gt;			</maml:introduction>
 <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
 <!--Generated by Help Cmdlet Editor-->
 	<command:details>
+		<command:name>Get-ASCubePermission</command:name>
+		<maml:description>
+			<maml:para></maml:para>
+		</maml:description>
+		<maml:copyright>
+           <maml:para />
+		<!--Add copy right info here.-->
+		</maml:copyright>
+		<command:verb>Get</command:verb>
+		<command:noun>ASCubePermission</command:noun>
+		<!--Add Dev version info here.-->
+		<dev:version />
+	</command:details>
+	<maml:description>
+	<!--This is the Description section-->
+		<maml:para></maml:para>
+	</maml:description>
+	<command:syntax>		<command:syntaxItem>
+			<maml:name>Get-ASCubePermission</maml:name>
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
+				<maml:name>RoleObject</maml:name>
+				<maml:description>
+					<maml:para>This is the role for which the CubePermissions are to be listed</maml:para>
+				</maml:description>
+			<command:parameterValue required="true" variableLength = "false" >Role</command:parameterValue>
+			</command:parameter>
+		</command:syntaxItem>
+	</command:syntax>
+	<command:parameters>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>RoleObject</maml:name>
+			<maml:description>
+				<maml:para>This is the role for which the CubePermissions are to be listed</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">Role</command:parameterValue>
+			<dev:type>
+				<maml:name>Role</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+	</command:parameters>
+	<command:inputTypes>
+		<command:inputType>
+			<dev:type>
+				<maml:name></maml:name>
+				<maml:uri/>
+				<maml:description>
+					<maml:para></maml:para>
+				</maml:description>
+			</dev:type>
+			<maml:description></maml:description>
+		</command:inputType>
+	</command:inputTypes>
+	<command:returnValues>
+		<command:returnValue>
+			<dev:type>
+				<maml:name></maml:name>
+				<maml:uri />
+				<maml:description>
+					<maml:para></maml:para>
+				</maml:description>
+			</dev:type>
+			<maml:description></maml:description>
+		</command:returnValue>
+	</command:returnValues>
+	<command:terminatingErrors>
+	</command:terminatingErrors>
+	<command:nonTerminatingErrors>
+	</command:nonTerminatingErrors>
+	<maml:alertSet>
+		<maml:title></maml:title>
+		<maml:alert>
+			<maml:para></maml:para>
+		</maml:alert>
+	</maml:alertSet>
+	<command:examples>
+		<command:example>
+			<maml:title>
+--------------  Get CubePermissions for a role --------------			</maml:title>
+			<maml:introduction>
+				<maml:para>C:\PS&gt;</maml:para>
+C:\PS&gt;			</maml:introduction>
+  			<dev:code>$role = get-asrole -servername &quot;localhost\sql08&quot; -databasename &quot;adventure works dw 2008&quot; -RoleName Test 
+get-ascubepermission -RoleObject $role</dev:code>
+  			<dev:remarks>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+  			</dev:remarks>
+			<command:commandLines>
+				<command:commandLine>
+					<command:commandText>
+ReadSourceData       : None
+DimensionPermissions : {}
+CellPermissions      : {}
+Parent               : Adventure Works
+ParentDatabase       : Adventure Works DW 2008
+ParentServer         : DARRENZ61M\SQL08
+RoleID               : Role
+Process              : False
+ReadDefinition       : None
+Read                 : Allowed
+Write                : None
+Role                 : Test
+IsLoaded             : True
+CreatedTimestamp     : 28/04/2009 2:58:59 PM
+LastSchemaUpdate     : 28/04/2009 2:58:59 PM
+Description          : 
+Annotations          : {}
+ID                   : CubePermission
+Name                 : CubePermission
+Site                 : 
+SiteID               : 
+OwningCollection     : {CubePermission}
+Container            :					</command:commandText>
+				</command:commandLine>
+			</command:commandLines>
+		</command:example>
+	</command:examples>
+	<maml:relatedLinks>
+	</maml:relatedLinks>
+</command:command>
+<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+<!--Generated by Help Cmdlet Editor-->
+	<command:details>
 		<command:name>Get-ASDatabase</command:name>
 		<maml:description>
 			<maml:para>Returns a list of one or more SSAS Databases from the specified server.</maml:para>
@@ -1114,6 +1184,13 @@ C:\PS&gt;			</maml:introduction>
 	</maml:description>
 	<command:syntax>		<command:syntaxItem>
 			<maml:name>Get-ASDimension</maml:name>
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByValue)" position = "1" >
+				<maml:name>ASDatabase</maml:name>
+				<maml:description>
+					<maml:para>The Database object from which to return the dimension.</maml:para>
+				</maml:description>
+			<command:parameterValue required="true" variableLength = "false" >Database</command:parameterValue>
+			</command:parameter>
 		</command:syntaxItem>
 		<command:syntaxItem>
 			<maml:name>Get-ASDimension</maml:name>
@@ -1149,16 +1226,6 @@ C:\PS&gt;			</maml:introduction>
 		<command:syntaxItem>
 			<maml:name>Get-ASDimension</maml:name>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByValue)" position = "1" >
-				<maml:name>ASDatabase</maml:name>
-				<maml:description>
-					<maml:para>The Database object from which to return the dimension.</maml:para>
-				</maml:description>
-			<command:parameterValue required="true" variableLength = "false" >Database</command:parameterValue>
-			</command:parameter>
-		</command:syntaxItem>
-		<command:syntaxItem>
-			<maml:name>Get-ASDimension</maml:name>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByValue)" position = "1" >
 				<maml:name>ASCube</maml:name>
 				<maml:description>
 					<maml:para>The Cube object from which to return the dimension.</maml:para>
@@ -1168,6 +1235,18 @@ C:\PS&gt;			</maml:introduction>
 		</command:syntaxItem>
 	</command:syntax>
 	<command:parameters>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="true (ByValue)" position="1">
+			<maml:name>ASDatabase</maml:name>
+			<maml:description>
+				<maml:para>The Database object from which to return the dimension.</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">Database</command:parameterValue>
+			<dev:type>
+				<maml:name>Database</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="1">
 			<maml:name>ServerName</maml:name>
 			<maml:description>
@@ -1212,18 +1291,6 @@ C:\PS&gt;			</maml:introduction>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
 				<maml:name>String</maml:name>
-				<maml:uri/>
-			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
-		</command:parameter>
-		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="true (ByValue)" position="1">
-			<maml:name>ASDatabase</maml:name>
-			<maml:description>
-				<maml:para>The Database object from which to return the dimension.</maml:para>
-			</maml:description>
-			<command:parameterValue required="true" variableLength="false">Database</command:parameterValue>
-			<dev:type>
-				<maml:name>Database</maml:name>
 				<maml:uri/>
 			</dev:type>
 			<dev:defaultValue></dev:defaultValue>
@@ -1296,8 +1363,7 @@ C:\PS&gt;			</maml:introduction>
 Name (ID)                                          Storage  State
                                                    Mode
 ---------                                          -------- -----
-Product (Dim Product)                              Molap    Processed
-					</command:commandText>
+Product (Dim Product)                              Molap    Processed					</command:commandText>
 				</command:commandLine>
 			</command:commandLines>
 		</command:example>
@@ -1386,12 +1452,26 @@ Product (Dim Product)                              Molap    Processed
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
 			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByValue)" position = "1" >
-				<maml:name>ASServer</maml:name>
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "2" >
+				<maml:name>XmlaRestrictions</maml:name>
 				<maml:description>
-					<maml:para>This is the server object that should be queried for the lock information. This parameter can be piped in to this cmdlet</maml:para>
+					<maml:para>This is an optional parameter which passes an XML fragment through to the restrictions parameter for the underlying DISCOVER_LOCKS request.</maml:para>
 				</maml:description>
-			<command:parameterValue required="true" variableLength = "false" >Server</command:parameterValue>
+			<command:parameterValue required="true" variableLength = "false" >AdomdRestrictionCollection</command:parameterValue>
+			</command:parameter>
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "3" >
+				<maml:name>DatabaseName</maml:name>
+				<maml:description>
+					<maml:para></maml:para>
+				</maml:description>
+			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
+			</command:parameter>
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "1" >
+				<maml:name>ServerName</maml:name>
+				<maml:description>
+					<maml:para>This is the name of the SSAS server to query for locking information</maml:para>
+				</maml:description>
+			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
 			</command:parameter>
 		</command:syntaxItem>
 		<command:syntaxItem>
@@ -1447,26 +1527,12 @@ Product (Dim Product)                              Molap    Processed
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
 			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "2" >
-				<maml:name>XmlaRestrictions</maml:name>
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByValue)" position = "1" >
+				<maml:name>ASServer</maml:name>
 				<maml:description>
-					<maml:para>This is an optional parameter which passes an XML fragment through to the restrictions parameter for the underlying DISCOVER_LOCKS request.</maml:para>
+					<maml:para>This is the server object that should be queried for the lock information. This parameter can be piped in to this cmdlet</maml:para>
 				</maml:description>
-			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
-			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "3" >
-				<maml:name>XmlaProperties</maml:name>
-				<maml:description>
-					<maml:para>This is an optional parameter which passes an XML fragment through to the Properties parameter for the underlying DISCOVER_LOCKS request.</maml:para>
-				</maml:description>
-			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
-			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "1" >
-				<maml:name>ServerName</maml:name>
-				<maml:description>
-					<maml:para>This is the name of the SSAS server to query for locking information</maml:para>
-				</maml:description>
-			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
+			<command:parameterValue required="true" variableLength = "false" >Server</command:parameterValue>
 			</command:parameter>
 		</command:syntaxItem>
 	</command:syntax>
@@ -1562,34 +1628,22 @@ Product (Dim Product)                              Molap    Processed
 			</dev:type>
 			<dev:defaultValue></dev:defaultValue>
 		</command:parameter>
-		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="true (ByValue)" position="1">
-			<maml:name>ASServer</maml:name>
-			<maml:description>
-				<maml:para>This is the server object that should be queried for the lock information. This parameter can be piped in to this cmdlet</maml:para>
-			</maml:description>
-			<command:parameterValue required="true" variableLength="false">Server</command:parameterValue>
-			<dev:type>
-				<maml:name>Server</maml:name>
-				<maml:uri/>
-			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
-		</command:parameter>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="2">
 			<maml:name>XmlaRestrictions</maml:name>
 			<maml:description>
 				<maml:para>This is an optional parameter which passes an XML fragment through to the restrictions parameter for the underlying DISCOVER_LOCKS request.</maml:para>
 			</maml:description>
-			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<command:parameterValue required="true" variableLength="false">AdomdRestrictionCollection</command:parameterValue>
 			<dev:type>
-				<maml:name>String</maml:name>
+				<maml:name>AdomdRestrictionCollection</maml:name>
 				<maml:uri/>
 			</dev:type>
 			<dev:defaultValue></dev:defaultValue>
 		</command:parameter>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="3">
-			<maml:name>XmlaProperties</maml:name>
+			<maml:name>DatabaseName</maml:name>
 			<maml:description>
-				<maml:para>This is an optional parameter which passes an XML fragment through to the Properties parameter for the underlying DISCOVER_LOCKS request.</maml:para>
+				<maml:para></maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
@@ -1606,6 +1660,18 @@ Product (Dim Product)                              Molap    Processed
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
 				<maml:name>String</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="true (ByValue)" position="1">
+			<maml:name>ASServer</maml:name>
+			<maml:description>
+				<maml:para>This is the server object that should be queried for the lock information. This parameter can be piped in to this cmdlet</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">Server</command:parameterValue>
+			<dev:type>
+				<maml:name>Server</maml:name>
 				<maml:uri/>
 			</dev:type>
 			<dev:defaultValue></dev:defaultValue>
@@ -1678,9 +1744,192 @@ C:\PS&gt;			</maml:introduction>
 <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
 <!--Generated by Help Cmdlet Editor-->
 	<command:details>
+		<command:name>Get-ASRole</command:name>
+		<maml:description>
+			<maml:para>This cmdlet returns a Role object from the specified Analysis Services database.</maml:para>
+		</maml:description>
+		<maml:copyright>
+           <maml:para />
+		<!--Add copy right info here.-->
+		</maml:copyright>
+		<command:verb>Get</command:verb>
+		<command:noun>ASRole</command:noun>
+		<!--Add Dev version info here.-->
+		<dev:version />
+	</command:details>
+	<maml:description>
+	<!--This is the Description section-->
+		<maml:para></maml:para>
+	</maml:description>
+	<command:syntax>		<command:syntaxItem>
+			<maml:name>Get-ASRole</maml:name>
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
+				<maml:name>RoleID</maml:name>
+				<maml:description>
+					<maml:para>If specified only the role with this ID will be returned. If omitted, all roles in the specified database will be returned.</maml:para>
+				</maml:description>
+			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
+			</command:parameter>
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
+				<maml:name>RoleName</maml:name>
+				<maml:description>
+					<maml:para>If specified only the role with this name will be returned. If omitted, all roles in the specified database will be returned.</maml:para>
+				</maml:description>
+			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
+			</command:parameter>
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "1" >
+				<maml:name>ServerName</maml:name>
+				<maml:description>
+					<maml:para>The name of the Server from which to return the role(s)</maml:para>
+				</maml:description>
+			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
+			</command:parameter>
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "2" >
+				<maml:name>DatabaseName</maml:name>
+				<maml:description>
+					<maml:para>The name of the Database from which to return the role(s)</maml:para>
+				</maml:description>
+			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
+			</command:parameter>
+		</command:syntaxItem>
+	</command:syntax>
+	<command:parameters>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>RoleID</maml:name>
+			<maml:description>
+				<maml:para>If specified only the role with this ID will be returned. If omitted, all roles in the specified database will be returned.</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<dev:type>
+				<maml:name>String</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>RoleName</maml:name>
+			<maml:description>
+				<maml:para>If specified only the role with this name will be returned. If omitted, all roles in the specified database will be returned.</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<dev:type>
+				<maml:name>String</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="1">
+			<maml:name>ServerName</maml:name>
+			<maml:description>
+				<maml:para>The name of the Server from which to return the role(s)</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<dev:type>
+				<maml:name>String</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="2">
+			<maml:name>DatabaseName</maml:name>
+			<maml:description>
+				<maml:para>The name of the Database from which to return the role(s)</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<dev:type>
+				<maml:name>String</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+	</command:parameters>
+	<command:inputTypes>
+		<command:inputType>
+			<dev:type>
+				<maml:name></maml:name>
+				<maml:uri/>
+				<maml:description>
+					<maml:para></maml:para>
+				</maml:description>
+			</dev:type>
+			<maml:description></maml:description>
+		</command:inputType>
+	</command:inputTypes>
+	<command:returnValues>
+		<command:returnValue>
+			<dev:type>
+				<maml:name>Microsoft.AnalysisServices.Role</maml:name>
+				<maml:uri />
+				<maml:description>
+					<maml:para></maml:para>
+				</maml:description>
+			</dev:type>
+			<maml:description></maml:description>
+		</command:returnValue>
+	</command:returnValues>
+	<command:terminatingErrors>
+	</command:terminatingErrors>
+	<command:nonTerminatingErrors>
+	</command:nonTerminatingErrors>
+	<maml:alertSet>
+		<maml:title></maml:title>
+		<maml:alert>
+			<maml:para></maml:para>
+		</maml:alert>
+	</maml:alertSet>
+	<command:examples>
+		<command:example>
+			<maml:title>
+--------------  Get All Roles --------------			</maml:title>
+			<maml:introduction>
+				<maml:para>C:\PS&gt;</maml:para>
+C:\PS&gt;			</maml:introduction>
+  			<dev:code>get-asrole -servername &quot;localhost&quot; -databasename &quot;adventure works dw&quot;</dev:code>
+  			<dev:remarks>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+  			</dev:remarks>
+			<command:commandLines>
+				<command:commandLine>
+					<command:commandText>
+					</command:commandText>
+				</command:commandLine>
+			</command:commandLines>
+		</command:example>
+		<command:example>
+			<maml:title>
+--------------  Get a Role by name --------------			</maml:title>
+			<maml:introduction>
+				<maml:para>C:\PS&gt;</maml:para>
+C:\PS&gt;			</maml:introduction>
+  			<dev:code>get-asrole -servername &quot;localhost&quot; -databasename &quot;adventure works dw&quot; -RoleName Test</dev:code>
+  			<dev:remarks>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+  			</dev:remarks>
+			<command:commandLines>
+				<command:commandLine>
+					<command:commandText>
+					</command:commandText>
+				</command:commandLine>
+			</command:commandLines>
+		</command:example>
+	</command:examples>
+	<maml:relatedLinks>
+	</maml:relatedLinks>
+</command:command>
+<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+<!--Generated by Help Cmdlet Editor-->
+	<command:details>
 		<command:name>Get-ASServer</command:name>
 		<maml:description>
-			<maml:para></maml:para>
+			<maml:para>This cmdlet is used to get a reference to an Analysis Services server.</maml:para>
 		</maml:description>
 		<maml:copyright>
            <maml:para />
@@ -1735,7 +1984,7 @@ C:\PS&gt;			</maml:introduction>
 	<command:returnValues>
 		<command:returnValue>
 			<dev:type>
-				<maml:name></maml:name>
+				<maml:name>Microsoft.AnalysisServices.Server</maml:name>
 				<maml:uri />
 				<maml:description>
 					<maml:para></maml:para>
@@ -1785,7 +2034,7 @@ C:\PS&gt;			</maml:introduction>
 	<command:details>
 		<command:name>Get-ASSession</command:name>
 		<maml:description>
-			<maml:para>Returns a list of Analysis Services sessions</maml:para>
+			<maml:para>Returns a collection of the current Analysis Services sessions</maml:para>
 		</maml:description>
 		<maml:copyright>
            <maml:para />
@@ -1802,27 +2051,17 @@ C:\PS&gt;			</maml:introduction>
 	</maml:description>
 	<command:syntax>		<command:syntaxItem>
 			<maml:name>Get-ASSession</maml:name>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByValue)" position = "1" >
-				<maml:name>ASServer</maml:name>
-				<maml:description>
-					<maml:para>This is an SSAS server object which can be passed in via the pipeline.</maml:para>
-				</maml:description>
-			<command:parameterValue required="true" variableLength = "false" >Server</command:parameterValue>
-			</command:parameter>
-		</command:syntaxItem>
-		<command:syntaxItem>
-			<maml:name>Get-ASSession</maml:name>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "2" >
 				<maml:name>XmlaRestrictions</maml:name>
 				<maml:description>
 					<maml:para>This is an XML fragment containing XMLA restrictions that are passed through to the DISCOVER_SESSIONS call.</maml:para>
 				</maml:description>
-			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
+			<command:parameterValue required="true" variableLength = "false" >AdomdRestrictionCollection</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "3" >
-				<maml:name>XmlaProperties</maml:name>
+				<maml:name>DatabaseName</maml:name>
 				<maml:description>
-					<maml:para>This is an XML fragment containing XMLA properties that are passed through to the DISCOVER_SESSIONS call.</maml:para>
+					<maml:para>Get only sessions relating to this database</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
 			</command:parameter>
@@ -1834,36 +2073,34 @@ C:\PS&gt;			</maml:introduction>
 			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
 			</command:parameter>
 		</command:syntaxItem>
+		<command:syntaxItem>
+			<maml:name>Get-ASSession</maml:name>
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByValue)" position = "1" >
+				<maml:name>ASServer</maml:name>
+				<maml:description>
+					<maml:para>This is an SSAS server object which can be passed in via the pipeline.</maml:para>
+				</maml:description>
+			<command:parameterValue required="true" variableLength = "false" >Server</command:parameterValue>
+			</command:parameter>
+		</command:syntaxItem>
 	</command:syntax>
 	<command:parameters>
-		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="true (ByValue)" position="1">
-			<maml:name>ASServer</maml:name>
-			<maml:description>
-				<maml:para>This is an SSAS server object which can be passed in via the pipeline.</maml:para>
-			</maml:description>
-			<command:parameterValue required="true" variableLength="false">Server</command:parameterValue>
-			<dev:type>
-				<maml:name>Server</maml:name>
-				<maml:uri/>
-			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
-		</command:parameter>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="2">
 			<maml:name>XmlaRestrictions</maml:name>
 			<maml:description>
 				<maml:para>This is an XML fragment containing XMLA restrictions that are passed through to the DISCOVER_SESSIONS call.</maml:para>
 			</maml:description>
-			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<command:parameterValue required="true" variableLength="false">AdomdRestrictionCollection</command:parameterValue>
 			<dev:type>
-				<maml:name>String</maml:name>
+				<maml:name>AdomdRestrictionCollection</maml:name>
 				<maml:uri/>
 			</dev:type>
 			<dev:defaultValue></dev:defaultValue>
 		</command:parameter>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="3">
-			<maml:name>XmlaProperties</maml:name>
+			<maml:name>DatabaseName</maml:name>
 			<maml:description>
-				<maml:para>This is an XML fragment containing XMLA properties that are passed through to the DISCOVER_SESSIONS call.</maml:para>
+				<maml:para>Get only sessions relating to this database</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
@@ -1880,6 +2117,18 @@ C:\PS&gt;			</maml:introduction>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
 				<maml:name>String</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="true (ByValue)" position="1">
+			<maml:name>ASServer</maml:name>
+			<maml:description>
+				<maml:para>This is an SSAS server object which can be passed in via the pipeline.</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">Server</command:parameterValue>
+			<dev:type>
+				<maml:name>Server</maml:name>
 				<maml:uri/>
 			</dev:type>
 			<dev:defaultValue></dev:defaultValue>
@@ -1979,16 +2228,16 @@ B9F64043-9F74-4EB... localhost\Administrator        DISCOVER_XML_META...
 <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
 <!--Generated by Help Cmdlet Editor-->
 	<command:details>
-		<command:name>Get-ASXmlaScript</command:name>
+		<command:name>Get-ASTrace</command:name>
 		<maml:description>
-			<maml:para></maml:para>
+			<maml:para>Returns a collection of trace objects from the server</maml:para>
 		</maml:description>
 		<maml:copyright>
            <maml:para />
 		<!--Add copy right info here.-->
 		</maml:copyright>
 		<command:verb>Get</command:verb>
-		<command:noun>ASXmlaScript</command:noun>
+		<command:noun>ASTrace</command:noun>
 		<!--Add Dev version info here.-->
 		<dev:version />
 	</command:details>
@@ -1997,158 +2246,85 @@ B9F64043-9F74-4EB... localhost\Administrator        DISCOVER_XML_META...
 		<maml:para></maml:para>
 	</maml:description>
 	<command:syntax>		<command:syntaxItem>
-			<maml:name>Get-ASXmlaScript</maml:name>
-			<command:parameter required = "false" variableLength = "true" globbing = "false" pipelineInput = "false" position = "1" >
-				<maml:name>MajorObjectPath</maml:name>
+			<maml:name>Get-ASTrace</maml:name>
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "2" >
+				<maml:name>XmlaRestrictions</maml:name>
 				<maml:description>
 					<maml:para></maml:para>
 				</maml:description>
-			<command:parameterValue required="true" variableLength = "true" >String[]</command:parameterValue>
+			<command:parameterValue required="true" variableLength = "false" >AdomdRestrictionCollection</command:parameterValue>
 			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
-				<maml:name>Create</maml:name>
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "3" >
+				<maml:name>DatabaseName</maml:name>
 				<maml:description>
 					<maml:para></maml:para>
 				</maml:description>
+			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
 			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
-				<maml:name>ExcludeDependents</maml:name>
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "1" >
+				<maml:name>ServerName</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>The name of the server from which to get</maml:para>
 				</maml:description>
-			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
-				<maml:name>ExcludePermissions</maml:name>
-				<maml:description>
-					<maml:para></maml:para>
-				</maml:description>
-			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
-				<maml:name>ExcludePartitions</maml:name>
-				<maml:description>
-					<maml:para></maml:para>
-				</maml:description>
+			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
 			</command:parameter>
 		</command:syntaxItem>
 		<command:syntaxItem>
-			<maml:name>Get-ASXmlaScript</maml:name>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
-				<maml:name>Create</maml:name>
-				<maml:description>
-					<maml:para></maml:para>
-				</maml:description>
-			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "2" >
-				<maml:name>ParentObject</maml:name>
-				<maml:description>
-					<maml:para></maml:para>
-				</maml:description>
-			<command:parameterValue required="true" variableLength = "false" >MajorObject</command:parameterValue>
-			</command:parameter>
+			<maml:name>Get-ASTrace</maml:name>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByValue)" position = "1" >
-				<maml:name>InputObject</maml:name>
+				<maml:name>ASServer</maml:name>
 				<maml:description>
 					<maml:para></maml:para>
 				</maml:description>
-			<command:parameterValue required="true" variableLength = "false" >MajorObject</command:parameterValue>
-			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
-				<maml:name>ExcludeDependents</maml:name>
-				<maml:description>
-					<maml:para></maml:para>
-				</maml:description>
-			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
-				<maml:name>ExcludePermissions</maml:name>
-				<maml:description>
-					<maml:para></maml:para>
-				</maml:description>
-			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
-				<maml:name>ExcludePartitions</maml:name>
-				<maml:description>
-					<maml:para></maml:para>
-				</maml:description>
+			<command:parameterValue required="true" variableLength = "false" >Server</command:parameterValue>
 			</command:parameter>
 		</command:syntaxItem>
 	</command:syntax>
 	<command:parameters>
-		<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="false" position="1">
-			<maml:name>MajorObjectPath</maml:name>
-			<maml:description>
-				<maml:para></maml:para>
-			</maml:description>
-			<command:parameterValue required="true" variableLength="true">String[]</command:parameterValue>
-			<dev:type>
-				<maml:name>String[]</maml:name>
-				<maml:uri/>
-			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
-		</command:parameter>
-		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
-			<maml:name>Create</maml:name>
-			<maml:description>
-				<maml:para></maml:para>
-			</maml:description>
-			<dev:type>
-				<maml:name>SwitchParameter</maml:name>
-				<maml:uri/>
-			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
-		</command:parameter>
-		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
-			<maml:name>ExcludeDependents</maml:name>
-			<maml:description>
-				<maml:para></maml:para>
-			</maml:description>
-			<dev:type>
-				<maml:name>SwitchParameter</maml:name>
-				<maml:uri/>
-			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
-		</command:parameter>
-		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
-			<maml:name>ExcludePermissions</maml:name>
-			<maml:description>
-				<maml:para></maml:para>
-			</maml:description>
-			<dev:type>
-				<maml:name>SwitchParameter</maml:name>
-				<maml:uri/>
-			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
-		</command:parameter>
-		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
-			<maml:name>ExcludePartitions</maml:name>
-			<maml:description>
-				<maml:para></maml:para>
-			</maml:description>
-			<dev:type>
-				<maml:name>SwitchParameter</maml:name>
-				<maml:uri/>
-			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
-		</command:parameter>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="2">
-			<maml:name>ParentObject</maml:name>
+			<maml:name>XmlaRestrictions</maml:name>
 			<maml:description>
 				<maml:para></maml:para>
 			</maml:description>
-			<command:parameterValue required="true" variableLength="false">MajorObject</command:parameterValue>
+			<command:parameterValue required="true" variableLength="false">AdomdRestrictionCollection</command:parameterValue>
 			<dev:type>
-				<maml:name>MajorObject</maml:name>
+				<maml:name>AdomdRestrictionCollection</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="3">
+			<maml:name>DatabaseName</maml:name>
+			<maml:description>
+				<maml:para></maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<dev:type>
+				<maml:name>String</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="1">
+			<maml:name>ServerName</maml:name>
+			<maml:description>
+				<maml:para>The name of the server from which to get</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<dev:type>
+				<maml:name>String</maml:name>
 				<maml:uri/>
 			</dev:type>
 			<dev:defaultValue></dev:defaultValue>
 		</command:parameter>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="true (ByValue)" position="1">
-			<maml:name>InputObject</maml:name>
+			<maml:name>ASServer</maml:name>
 			<maml:description>
 				<maml:para></maml:para>
 			</maml:description>
-			<command:parameterValue required="true" variableLength="false">MajorObject</command:parameterValue>
+			<command:parameterValue required="true" variableLength="false">Server</command:parameterValue>
 			<dev:type>
-				<maml:name>MajorObject</maml:name>
+				<maml:name>Server</maml:name>
 				<maml:uri/>
 			</dev:type>
 			<dev:defaultValue></dev:defaultValue>
@@ -2196,9 +2372,852 @@ B9F64043-9F74-4EB... localhost\Administrator        DISCOVER_XML_META...
 <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
 <!--Generated by Help Cmdlet Editor-->
 	<command:details>
+		<command:name>Get-ASTraceSubclass</command:name>
+		<maml:description>
+			<maml:para>Returns a list of the available event subclasses with their descriptions</maml:para>
+		</maml:description>
+		<maml:copyright>
+           <maml:para />
+		<!--Add copy right info here.-->
+		</maml:copyright>
+		<command:verb>Get</command:verb>
+		<command:noun>ASTraceSubclass</command:noun>
+		<!--Add Dev version info here.-->
+		<dev:version />
+	</command:details>
+	<maml:description>
+	<!--This is the Description section-->
+		<maml:para></maml:para>
+	</maml:description>
+	<command:syntax>		<command:syntaxItem>
+			<maml:name>Get-ASTraceSubclass</maml:name>
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "1" >
+				<maml:name>ServerName</maml:name>
+				<maml:description>
+					<maml:para>The name of the server to query for the trace event subclasses.</maml:para>
+				</maml:description>
+			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
+			</command:parameter>
+		</command:syntaxItem>
+	</command:syntax>
+	<command:parameters>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="1">
+			<maml:name>ServerName</maml:name>
+			<maml:description>
+				<maml:para>The name of the server to query for the trace event subclasses.</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<dev:type>
+				<maml:name>String</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+	</command:parameters>
+	<command:inputTypes>
+		<command:inputType>
+			<dev:type>
+				<maml:name></maml:name>
+				<maml:uri/>
+				<maml:description>
+					<maml:para></maml:para>
+				</maml:description>
+			</dev:type>
+			<maml:description></maml:description>
+		</command:inputType>
+	</command:inputTypes>
+	<command:returnValues>
+		<command:returnValue>
+			<dev:type>
+				<maml:name></maml:name>
+				<maml:uri />
+				<maml:description>
+					<maml:para></maml:para>
+				</maml:description>
+			</dev:type>
+			<maml:description></maml:description>
+		</command:returnValue>
+	</command:returnValues>
+	<command:terminatingErrors>
+	</command:terminatingErrors>
+	<command:nonTerminatingErrors>
+	</command:nonTerminatingErrors>
+	<maml:alertSet>
+		<maml:title></maml:title>
+		<maml:alert>
+			<maml:para></maml:para>
+		</maml:alert>
+	</maml:alertSet>
+	<command:examples>
+		<command:example>
+			<maml:title>
+--------------  List event Subclasses --------------			</maml:title>
+			<maml:introduction>
+				<maml:para>C:\PS&gt;</maml:para>
+C:\PS&gt;			</maml:introduction>
+  			<dev:code>get-AsTraceSubclass localhost</dev:code>
+  			<dev:remarks>
+				<maml:para>returns a list of the trace subclasses from the localhost server.</maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+  			</dev:remarks>
+			<command:commandLines>
+				<command:commandLine>
+					<command:commandText>
+EventName        : Audit Server Starts And Stops
+EventID          : 4
+EventDescription : Records service shut down, start, and pause activities.
+SubclassName     : Instance Shutdown
+SubclassId       : 1
+
+EventName        : Audit Server Starts And Stops
+EventID          : 4
+EventDescription : Records service shut down, start, and pause activities.
+SubclassName     : Instance Started
+SubclassId       : 2					</command:commandText>
+				</command:commandLine>
+			</command:commandLines>
+		</command:example>
+		<command:example>
+			<maml:title>
+--------------  Table of Subclass IDs and Names --------------			</maml:title>
+			<maml:introduction>
+				<maml:para>C:\PS&gt;</maml:para>
+C:\PS&gt;			</maml:introduction>
+  			<dev:code>get-AsTraceSubclass localhost | Format-Table EventID, EventName, SubclassID, SubclassName - auto</dev:code>
+  			<dev:remarks>
+				<maml:para>Outputs a table of the Event Sub	classes</maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+  			</dev:remarks>
+			<command:commandLines>
+				<command:commandLine>
+					<command:commandText>
+EventID EventName                     SubclassId SubclassName
+------- ---------                     ---------- ------------
+4       Audit Server Starts And Stops 1          Instance Shutdown
+4       Audit Server Starts And Stops 2          Instance Started
+4       Audit Server Starts And Stops 3          Instance Paused
+4       Audit Server Starts And Stops 4          Instance Continued
+19      Audit Backup/Restore Event    1          Backup
+19      Audit Backup/Restore Event    2          Restore
+19      Audit Backup/Restore Event    3          Synchronize
+19      Audit Backup/Restore Event    4          Detach
+19      Audit Backup/Restore Event    5          Attach
+5       Progress Report Begin         1          Process
+5       Progress Report Begin         2          Merge
+5       Progress Report Begin         3          Delete
+5       Progress Report Begin         4          DeleteOldAggregations					</command:commandText>
+				</command:commandLine>
+			</command:commandLines>
+		</command:example>
+	</command:examples>
+	<maml:relatedLinks>
+	</maml:relatedLinks>
+</command:command>
+<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+<!--Generated by Help Cmdlet Editor-->
+	<command:details>
+		<command:name>Invoke-AsDiscover</command:name>
+		<maml:description>
+			<maml:para>Returns the results from the specified DISCOVER command</maml:para>
+		</maml:description>
+		<maml:copyright>
+           <maml:para />
+		<!--Add copy right info here.-->
+		</maml:copyright>
+		<command:verb>Invoke</command:verb>
+		<command:noun>AsDiscover</command:noun>
+		<!--Add Dev version info here.-->
+		<dev:version />
+	</command:details>
+	<maml:description>
+	<!--This is the Description section-->
+		<maml:para></maml:para>
+	</maml:description>
+	<command:syntax>		<command:syntaxItem>
+			<maml:name>Invoke-AsDiscover</maml:name>
+			<command:parameter required = "true" variableLength = "false" globbing = "false" pipelineInput = "true (ByValue)" position = "1" >
+				<maml:name>ServerName</maml:name>
+				<maml:description>
+					<maml:para>The server against which to execute the DISCOVER</maml:para>
+				</maml:description>
+			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
+			</command:parameter>
+			<command:parameter required = "true" variableLength = "false" globbing = "false" pipelineInput = "false" position = "2" >
+				<maml:name>RowsetName</maml:name>
+				<maml:description>
+					<maml:para>The Schema rowset which is to be executed by the Discover command</maml:para>
+				</maml:description>
+			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
+			</command:parameter>
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
+				<maml:name>Restrictions</maml:name>
+				<maml:description>
+					<maml:para>An XMLA snippet containing the restrictions that apply to the specified rowset.</maml:para>
+				</maml:description>
+			<command:parameterValue required="true" variableLength = "false" >AdomdRestrictionCollection</command:parameterValue>
+			</command:parameter>
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
+				<maml:name>Properties</maml:name>
+				<maml:description>
+					<maml:para>An XMLA snippet containing the properties that apply to the specified rowset.</maml:para>
+				</maml:description>
+			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
+			</command:parameter>
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
+				<maml:name>WhatIf</maml:name>
+				<maml:description>
+					<maml:para></maml:para>
+				</maml:description>
+			</command:parameter>
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
+				<maml:name>Confirm</maml:name>
+				<maml:description>
+					<maml:para></maml:para>
+				</maml:description>
+			</command:parameter>
+		</command:syntaxItem>
+	</command:syntax>
+	<command:parameters>
+		<command:parameter required="true" variableLength="false" globbing="false" pipelineInput="true (ByValue)" position="1">
+			<maml:name>ServerName</maml:name>
+			<maml:description>
+				<maml:para>The server against which to execute the DISCOVER</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<dev:type>
+				<maml:name>String</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="2">
+			<maml:name>RowsetName</maml:name>
+			<maml:description>
+				<maml:para>The Schema rowset which is to be executed by the Discover command</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<dev:type>
+				<maml:name>String</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>Restrictions</maml:name>
+			<maml:description>
+				<maml:para>An XMLA snippet containing the restrictions that apply to the specified rowset.</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">AdomdRestrictionCollection</command:parameterValue>
+			<dev:type>
+				<maml:name>AdomdRestrictionCollection</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>Properties</maml:name>
+			<maml:description>
+				<maml:para>An XMLA snippet containing the properties that apply to the specified rowset.</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<dev:type>
+				<maml:name>String</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>WhatIf</maml:name>
+			<maml:description>
+				<maml:para></maml:para>
+			</maml:description>
+			<dev:type>
+				<maml:name>SwitchParameter</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>Confirm</maml:name>
+			<maml:description>
+				<maml:para></maml:para>
+			</maml:description>
+			<dev:type>
+				<maml:name>SwitchParameter</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+	</command:parameters>
+	<command:inputTypes>
+		<command:inputType>
+			<dev:type>
+				<maml:name></maml:name>
+				<maml:uri/>
+				<maml:description>
+					<maml:para></maml:para>
+				</maml:description>
+			</dev:type>
+			<maml:description></maml:description>
+		</command:inputType>
+	</command:inputTypes>
+	<command:returnValues>
+		<command:returnValue>
+			<dev:type>
+				<maml:name></maml:name>
+				<maml:uri />
+				<maml:description>
+					<maml:para></maml:para>
+				</maml:description>
+			</dev:type>
+			<maml:description></maml:description>
+		</command:returnValue>
+	</command:returnValues>
+	<command:terminatingErrors>
+	</command:terminatingErrors>
+	<command:nonTerminatingErrors>
+	</command:nonTerminatingErrors>
+	<maml:alertSet>
+		<maml:title></maml:title>
+		<maml:alert>
+			<maml:para></maml:para>
+		</maml:alert>
+	</maml:alertSet>
+	<command:examples>
+		<command:example>
+			<maml:title>
+--------------  Calling DISCOVER_CONNECTIONS --------------			</maml:title>
+			<maml:introduction>
+				<maml:para>C:\PS&gt;</maml:para>
+C:\PS&gt;			</maml:introduction>
+  			<dev:code>invoke-asdiscover localhost\sql08 DISCOVER_CONNECTIONS | ft</dev:code>
+  			<dev:remarks>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+  			</dev:remarks>
+			<command:commandLines>
+				<command:commandLine>
+					<command:commandText>
+ConnectionI ConnectionU ConnectionI ConnectionH ConnectionH ConnectionS ConnectionE ConnectionL ConnectionL ConnectionL
+          d serName     mpersonated ostName     ostApplicat tartTime    lapsedTimeM astCommandS astCommandE astCommandE
+                        UserName                ion                               s tartTime    ndTime      lapsedTimeM
+                                                                                                                      s
+----------- ----------- ----------- ----------- ----------- ----------- ----------- ----------- ----------- -----------
+          3 DARRENZ6...             127.0.0.... PowerSSA... 13/06/20...     4428125 13/06/20... 13/06/20...           1
+          9 DARRENZ6...             127.0.0....             13/06/20...           3 13/06/20... 13/06/20...           0					</command:commandText>
+				</command:commandLine>
+			</command:commandLines>
+		</command:example>
+	</command:examples>
+	<maml:relatedLinks>
+	</maml:relatedLinks>
+</command:command>
+<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+<!--Generated by Help Cmdlet Editor-->
+	<command:details>
+		<command:name>Invoke-AsExecute</command:name>
+		<maml:description>
+			<maml:para>Runs an Execute command against the specified server</maml:para>
+		</maml:description>
+		<maml:copyright>
+           <maml:para />
+		<!--Add copy right info here.-->
+		</maml:copyright>
+		<command:verb>Invoke</command:verb>
+		<command:noun>AsExecute</command:noun>
+		<!--Add Dev version info here.-->
+		<dev:version />
+	</command:details>
+	<maml:description>
+	<!--This is the Description section-->
+		<maml:para></maml:para>
+	</maml:description>
+	<command:syntax>		<command:syntaxItem>
+			<maml:name>Invoke-AsExecute</maml:name>
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "1" >
+				<maml:name>ServerName</maml:name>
+				<maml:description>
+					<maml:para>The name of the server against which the command should be executed.</maml:para>
+				</maml:description>
+			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
+			</command:parameter>
+			<command:parameter required = "true" variableLength = "false" globbing = "false" pipelineInput = "false" position = "2" >
+				<maml:name>Xmla</maml:name>
+				<maml:description>
+					<maml:para>The XMLA command to be sent to the server.</maml:para>
+				</maml:description>
+			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
+			</command:parameter>
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
+				<maml:name>WhatIf</maml:name>
+				<maml:description>
+					<maml:para>Displays the command that would have been executed without actually executing it.</maml:para>
+				</maml:description>
+			</command:parameter>
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
+				<maml:name>Confirm</maml:name>
+				<maml:description>
+					<maml:para>Asks for confirmation before executing the specified command</maml:para>
+				</maml:description>
+			</command:parameter>
+		</command:syntaxItem>
+	</command:syntax>
+	<command:parameters>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="1">
+			<maml:name>ServerName</maml:name>
+			<maml:description>
+				<maml:para>The name of the server against which the command should be executed.</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<dev:type>
+				<maml:name>String</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="2">
+			<maml:name>Xmla</maml:name>
+			<maml:description>
+				<maml:para>The XMLA command to be sent to the server.</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<dev:type>
+				<maml:name>String</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>WhatIf</maml:name>
+			<maml:description>
+				<maml:para>Displays the command that would have been executed without actually executing it.</maml:para>
+			</maml:description>
+			<dev:type>
+				<maml:name>SwitchParameter</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>Confirm</maml:name>
+			<maml:description>
+				<maml:para>Asks for confirmation before executing the specified command</maml:para>
+			</maml:description>
+			<dev:type>
+				<maml:name>SwitchParameter</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+	</command:parameters>
+	<command:inputTypes>
+		<command:inputType>
+			<dev:type>
+				<maml:name></maml:name>
+				<maml:uri/>
+				<maml:description>
+					<maml:para></maml:para>
+				</maml:description>
+			</dev:type>
+			<maml:description></maml:description>
+		</command:inputType>
+	</command:inputTypes>
+	<command:returnValues>
+		<command:returnValue>
+			<dev:type>
+				<maml:name></maml:name>
+				<maml:uri />
+				<maml:description>
+					<maml:para></maml:para>
+				</maml:description>
+			</dev:type>
+			<maml:description></maml:description>
+		</command:returnValue>
+	</command:returnValues>
+	<command:terminatingErrors>
+	</command:terminatingErrors>
+	<command:nonTerminatingErrors>
+	</command:nonTerminatingErrors>
+	<maml:alertSet>
+		<maml:title></maml:title>
+		<maml:alert>
+			<maml:para></maml:para>
+		</maml:alert>
+	</maml:alertSet>
+	<command:examples>
+	</command:examples>
+	<maml:relatedLinks>
+	</maml:relatedLinks>
+</command:command>
+<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+<!--Generated by Help Cmdlet Editor-->
+	<command:details>
+		<command:name>Invoke-ASMDX</command:name>
+		<maml:description>
+			<maml:para>Executes an MDX statement and returns the result as a collection of PSObjects</maml:para>
+		</maml:description>
+		<maml:copyright>
+           <maml:para />
+		<!--Add copy right info here.-->
+		</maml:copyright>
+		<command:verb>Invoke</command:verb>
+		<command:noun>ASMDX</command:noun>
+		<!--Add Dev version info here.-->
+		<dev:version />
+	</command:details>
+	<maml:description>
+	<!--This is the Description section-->
+		<maml:para></maml:para>
+	</maml:description>
+	<command:syntax>		<command:syntaxItem>
+			<maml:name>Invoke-ASMDX</maml:name>
+			<command:parameter required = "true" variableLength = "false" globbing = "false" pipelineInput = "false" position = "3" >
+				<maml:name>Query</maml:name>
+				<maml:description>
+					<maml:para>A string containing an MDX query</maml:para>
+				</maml:description>
+			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
+			</command:parameter>
+			<command:parameter required = "true" variableLength = "false" globbing = "false" pipelineInput = "false" position = "1" >
+				<maml:name>ServerName</maml:name>
+				<maml:description>
+					<maml:para>The name of the server against which the query is to be executed.</maml:para>
+				</maml:description>
+			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
+			</command:parameter>
+			<command:parameter required = "true" variableLength = "false" globbing = "false" pipelineInput = "false" position = "2" >
+				<maml:name>DatabaseName</maml:name>
+				<maml:description>
+					<maml:para>The name of the database against which the query should be executed.</maml:para>
+				</maml:description>
+			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
+			</command:parameter>
+		</command:syntaxItem>
+	</command:syntax>
+	<command:parameters>
+		<command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="3">
+			<maml:name>Query</maml:name>
+			<maml:description>
+				<maml:para>A string containing an MDX query</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<dev:type>
+				<maml:name>String</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="1">
+			<maml:name>ServerName</maml:name>
+			<maml:description>
+				<maml:para>The name of the server against which the query is to be executed.</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<dev:type>
+				<maml:name>String</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="2">
+			<maml:name>DatabaseName</maml:name>
+			<maml:description>
+				<maml:para>The name of the database against which the query should be executed.</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<dev:type>
+				<maml:name>String</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+	</command:parameters>
+	<command:inputTypes>
+		<command:inputType>
+			<dev:type>
+				<maml:name></maml:name>
+				<maml:uri/>
+				<maml:description>
+					<maml:para></maml:para>
+				</maml:description>
+			</dev:type>
+			<maml:description></maml:description>
+		</command:inputType>
+	</command:inputTypes>
+	<command:returnValues>
+		<command:returnValue>
+			<dev:type>
+				<maml:name></maml:name>
+				<maml:uri />
+				<maml:description>
+					<maml:para></maml:para>
+				</maml:description>
+			</dev:type>
+			<maml:description></maml:description>
+		</command:returnValue>
+	</command:returnValues>
+	<command:terminatingErrors>
+	</command:terminatingErrors>
+	<command:nonTerminatingErrors>
+	</command:nonTerminatingErrors>
+	<maml:alertSet>
+		<maml:title></maml:title>
+		<maml:alert>
+			<maml:para></maml:para>
+		</maml:alert>
+	</maml:alertSet>
+	<command:examples>
+		<command:example>
+			<maml:title>
+--------------  Simple Query --------------			</maml:title>
+			<maml:introduction>
+				<maml:para>C:\PS&gt;</maml:para>
+C:\PS&gt;			</maml:introduction>
+  			<dev:code>Invoke-AsMdx localhost &quot;Adventure Works DW&quot; &quot;SELECT [Measures].[Internet Sales Amount] on 0 FROM [Adventure Works]&quot;</dev:code>
+  			<dev:remarks>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+  			</dev:remarks>
+			<command:commandLines>
+				<command:commandLine>
+					<command:commandText>
+[Measures].[Internet Sales Amount]
+----------------------------------
+                     29358677.2207					</command:commandText>
+				</command:commandLine>
+			</command:commandLines>
+		</command:example>
+	</command:examples>
+	<maml:relatedLinks>
+	</maml:relatedLinks>
+</command:command>
+<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+<!--Generated by Help Cmdlet Editor-->
+	<command:details>
+		<command:name>New-ASScript</command:name>
+		<maml:description>
+			<maml:para>Generates an XMLA script for the specified object.</maml:para>
+		</maml:description>
+		<maml:copyright>
+           <maml:para />
+		<!--Add copy right info here.-->
+		</maml:copyright>
+		<command:verb>New</command:verb>
+		<command:noun>ASScript</command:noun>
+		<!--Add Dev version info here.-->
+		<dev:version />
+	</command:details>
+	<maml:description>
+	<!--This is the Description section-->
+		<maml:para></maml:para>
+	</maml:description>
+	<command:syntax>		<command:syntaxItem>
+			<maml:name>New-ASScript</maml:name>
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
+				<maml:name>Create</maml:name>
+				<maml:description>
+					<maml:para>Setting this flag Will cause the cmdlet to return a CREATE script instead of an ALTER script.</maml:para>
+				</maml:description>
+			</command:parameter>
+			<command:parameter required = "true" variableLength = "false" globbing = "false" pipelineInput = "true (ByValue)" position = "1" >
+				<maml:name>InputObject</maml:name>
+				<maml:description>
+					<maml:para>This is the object for which the XMLA script will be generated</maml:para>
+				</maml:description>
+			<command:parameterValue required="true" variableLength = "false" >MajorObject</command:parameterValue>
+			</command:parameter>
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
+				<maml:name>ExcludeDependents</maml:name>
+				<maml:description>
+					<maml:para>Excludes dependant objects only scripting the specified object</maml:para>
+				</maml:description>
+			</command:parameter>
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
+				<maml:name>ExcludePermissions</maml:name>
+				<maml:description>
+					<maml:para>Excludes permissions from the XMLA script</maml:para>
+				</maml:description>
+			</command:parameter>
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
+				<maml:name>ExcludePartitions</maml:name>
+				<maml:description>
+					<maml:para>Excludes partitions from a Cube script</maml:para>
+				</maml:description>
+			</command:parameter>
+		</command:syntaxItem>
+	</command:syntax>
+	<command:parameters>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>Create</maml:name>
+			<maml:description>
+				<maml:para>Setting this flag Will cause the cmdlet to return a CREATE script instead of an ALTER script.</maml:para>
+			</maml:description>
+			<dev:type>
+				<maml:name>SwitchParameter</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="true" variableLength="false" globbing="false" pipelineInput="true (ByValue)" position="1">
+			<maml:name>InputObject</maml:name>
+			<maml:description>
+				<maml:para>This is the object for which the XMLA script will be generated</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">MajorObject</command:parameterValue>
+			<dev:type>
+				<maml:name>MajorObject</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>ExcludeDependents</maml:name>
+			<maml:description>
+				<maml:para>Excludes dependant objects only scripting the specified object</maml:para>
+			</maml:description>
+			<dev:type>
+				<maml:name>SwitchParameter</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>ExcludePermissions</maml:name>
+			<maml:description>
+				<maml:para>Excludes permissions from the XMLA script</maml:para>
+			</maml:description>
+			<dev:type>
+				<maml:name>SwitchParameter</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>ExcludePartitions</maml:name>
+			<maml:description>
+				<maml:para>Excludes partitions from a Cube script</maml:para>
+			</maml:description>
+			<dev:type>
+				<maml:name>SwitchParameter</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+	</command:parameters>
+	<command:inputTypes>
+		<command:inputType>
+			<dev:type>
+				<maml:name></maml:name>
+				<maml:uri/>
+				<maml:description>
+					<maml:para></maml:para>
+				</maml:description>
+			</dev:type>
+			<maml:description></maml:description>
+		</command:inputType>
+	</command:inputTypes>
+	<command:returnValues>
+		<command:returnValue>
+			<dev:type>
+				<maml:name></maml:name>
+				<maml:uri />
+				<maml:description>
+					<maml:para></maml:para>
+				</maml:description>
+			</dev:type>
+			<maml:description></maml:description>
+		</command:returnValue>
+	</command:returnValues>
+	<command:terminatingErrors>
+	</command:terminatingErrors>
+	<command:nonTerminatingErrors>
+	</command:nonTerminatingErrors>
+	<maml:alertSet>
+		<maml:title></maml:title>
+		<maml:alert>
+			<maml:para></maml:para>
+		</maml:alert>
+	</maml:alertSet>
+	<command:examples>
+		<command:example>
+			<maml:title>
+--------------  Get a Dimension XMLA alter script --------------			</maml:title>
+			<maml:introduction>
+				<maml:para>C:\PS&gt;</maml:para>
+C:\PS&gt;			</maml:introduction>
+  			<dev:code>$dim = get-AsDimension localhost\sql08 &quot;Adventure Works DW 2008&quot; &quot;Geography&quot;	
+$script = new-AsScript $dim</dev:code>
+  			<dev:remarks>
+				<maml:para>Returns the XMLA Alter script as a string to the $script variable</maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+  			</dev:remarks>
+			<command:commandLines>
+				<command:commandLine>
+					<command:commandText>
+&lt;Alter AllowCreate=&quot;true&quot; ObjectExpansion=&quot;ExpandFull&quot; xmlns=&quot;http://schemas.microsoft.com/analysisservices/2003/engine
+&quot;&gt;
+  &lt;Object&gt;
+    &lt;DatabaseID&gt;Adventure Works DW 2008&lt;/DatabaseID&gt;
+    &lt;DimensionID&gt;Dim Geography&lt;/DimensionID&gt;
+  &lt;/Object&gt;
+  &lt;ObjectDefinition&gt;
+    &lt;Dimension xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns
+:ddl2=&quot;http://schemas.microsoft.com/analysisservices/2003/engine/2&quot; xmlns:ddl2_2=&quot;http://schemas.microsoft.com/analysis
+services/2003/engine/2/2&quot;&gt;
+      &lt;ID&gt;Dim Geography&lt;/ID&gt;
+      &lt;Name&gt;Geography&lt;/Name&gt;
+      &lt;Annotations&gt;
+        &lt;Annotation&gt;
+...					</command:commandText>
+				</command:commandLine>
+			</command:commandLines>
+		</command:example>
+		<command:example>
+			<maml:title>
+--------------  Create an Xmla File --------------			</maml:title>
+			<maml:introduction>
+				<maml:para>C:\PS&gt;</maml:para>
+C:\PS&gt;			</maml:introduction>
+  			<dev:code>get-AsDimension localhost\sql08 &quot;Adventure Works DW 2008&quot; &quot;Geography&quot; | new-AsScript $dim &gt; c:\data\DimGeography.xmla</dev:code>
+  			<dev:remarks>
+				<maml:para>This script pipes the output of the new-AsScript cmdlet to the DimGeography.xmla file.</maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+  			</dev:remarks>
+			<command:commandLines>
+				<command:commandLine>
+					<command:commandText>
+					</command:commandText>
+				</command:commandLine>
+			</command:commandLines>
+		</command:example>
+	</command:examples>
+	<maml:relatedLinks>
+	</maml:relatedLinks>
+</command:command>
+<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+<!--Generated by Help Cmdlet Editor-->
+	<command:details>
 		<command:name>Remove-ASClrAssembly</command:name>
 		<maml:description>
-			<maml:para>Removes a CLR assembly from the specified server or database.</maml:para>
+			<maml:para>Deletes the specified assembly</maml:para>
 		</maml:description>
 		<maml:copyright>
            <maml:para />
@@ -2211,41 +3230,41 @@ B9F64043-9F74-4EB... localhost\Administrator        DISCOVER_XML_META...
 	</command:details>
 	<maml:description>
 	<!--This is the Description section-->
-		<maml:para>Removes a CLR assembly from the specified server or database.</maml:para>
+		<maml:para></maml:para>
 	</maml:description>
 	<command:syntax>		<command:syntaxItem>
 			<maml:name>Remove-ASClrAssembly</maml:name>
 			<command:parameter required = "true" variableLength = "false" globbing = "false" pipelineInput = "false" position = "1" >
 				<maml:name>AssemblyName</maml:name>
 				<maml:description>
-					<maml:para>The name of the assembly to be removed</maml:para>
+					<maml:para>The name of the Assembly to remove</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "2" >
 				<maml:name>DatabaseName</maml:name>
 				<maml:description>
-					<maml:para>If this assembly is stored in a database this parameter holds specifies the name of that database. </maml:para>
+					<maml:para>The name of the Database if this is a database level assembly that is being removed.</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "3" >
 				<maml:name>ServerName</maml:name>
 				<maml:description>
-					<maml:para>This is the name of the server</maml:para>
+					<maml:para>The name of the server where the assembly is stored.</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
 				<maml:name>WhatIf</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>Specifying -WhatIf will print a message of what the command would have done, but will not actually perform the action.</maml:para>
 				</maml:description>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
 				<maml:name>Confirm</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>Will request confirmation before dropping any assemblies</maml:para>
 				</maml:description>
 			</command:parameter>
 		</command:syntaxItem>
@@ -2254,27 +3273,27 @@ B9F64043-9F74-4EB... localhost\Administrator        DISCOVER_XML_META...
 			<command:parameter required = "true" variableLength = "false" globbing = "false" pipelineInput = "false" position = "1" >
 				<maml:name>AssemblyName</maml:name>
 				<maml:description>
-					<maml:para>The name of the assembly to be removed</maml:para>
+					<maml:para>The name of the Assembly to remove</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
 			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "2" >
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByValue)" position = "2" >
 				<maml:name>Server</maml:name>
 				<maml:description>
-					<maml:para>This is the server object from which the assembly is to be removed.</maml:para>
+					<maml:para>The server object from which to remove the assembly</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >Server</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
 				<maml:name>WhatIf</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>Specifying -WhatIf will print a message of what the command would have done, but will not actually perform the action.</maml:para>
 				</maml:description>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
 				<maml:name>Confirm</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>Will request confirmation before dropping any assemblies</maml:para>
 				</maml:description>
 			</command:parameter>
 		</command:syntaxItem>
@@ -2283,27 +3302,27 @@ B9F64043-9F74-4EB... localhost\Administrator        DISCOVER_XML_META...
 			<command:parameter required = "true" variableLength = "false" globbing = "false" pipelineInput = "false" position = "1" >
 				<maml:name>AssemblyName</maml:name>
 				<maml:description>
-					<maml:para>The name of the assembly to be removed</maml:para>
+					<maml:para>The name of the Assembly to remove</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
 			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "2" >
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByValue)" position = "2" >
 				<maml:name>Database</maml:name>
 				<maml:description>
-					<maml:para>This is the database object from which the assembly is to be removed.</maml:para>
+					<maml:para>The database object from which to remove the assembly</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >Database</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
 				<maml:name>WhatIf</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>Specifying -WhatIf will print a message of what the command would have done, but will not actually perform the action.</maml:para>
 				</maml:description>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
 				<maml:name>Confirm</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>Will request confirmation before dropping any assemblies</maml:para>
 				</maml:description>
 			</command:parameter>
 		</command:syntaxItem>
@@ -2312,7 +3331,7 @@ B9F64043-9F74-4EB... localhost\Administrator        DISCOVER_XML_META...
 		<command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="1">
 			<maml:name>AssemblyName</maml:name>
 			<maml:description>
-				<maml:para>The name of the assembly to be removed</maml:para>
+				<maml:para>The name of the Assembly to remove</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
@@ -2324,7 +3343,7 @@ B9F64043-9F74-4EB... localhost\Administrator        DISCOVER_XML_META...
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="2">
 			<maml:name>DatabaseName</maml:name>
 			<maml:description>
-				<maml:para>If this assembly is stored in a database this parameter holds specifies the name of that database. </maml:para>
+				<maml:para>The name of the Database if this is a database level assembly that is being removed.</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
@@ -2336,7 +3355,7 @@ B9F64043-9F74-4EB... localhost\Administrator        DISCOVER_XML_META...
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="3">
 			<maml:name>ServerName</maml:name>
 			<maml:description>
-				<maml:para>This is the name of the server</maml:para>
+				<maml:para>The name of the server where the assembly is stored.</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
@@ -2348,7 +3367,7 @@ B9F64043-9F74-4EB... localhost\Administrator        DISCOVER_XML_META...
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
 			<maml:name>WhatIf</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>Specifying -WhatIf will print a message of what the command would have done, but will not actually perform the action.</maml:para>
 			</maml:description>
 			<dev:type>
 				<maml:name>SwitchParameter</maml:name>
@@ -2359,7 +3378,7 @@ B9F64043-9F74-4EB... localhost\Administrator        DISCOVER_XML_META...
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
 			<maml:name>Confirm</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>Will request confirmation before dropping any assemblies</maml:para>
 			</maml:description>
 			<dev:type>
 				<maml:name>SwitchParameter</maml:name>
@@ -2367,10 +3386,10 @@ B9F64043-9F74-4EB... localhost\Administrator        DISCOVER_XML_META...
 			</dev:type>
 			<dev:defaultValue></dev:defaultValue>
 		</command:parameter>
-		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="2">
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="true (ByValue)" position="2">
 			<maml:name>Server</maml:name>
 			<maml:description>
-				<maml:para>This is the server object from which the assembly is to be removed.</maml:para>
+				<maml:para>The server object from which to remove the assembly</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">Server</command:parameterValue>
 			<dev:type>
@@ -2379,214 +3398,14 @@ B9F64043-9F74-4EB... localhost\Administrator        DISCOVER_XML_META...
 			</dev:type>
 			<dev:defaultValue></dev:defaultValue>
 		</command:parameter>
-		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="2">
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="true (ByValue)" position="2">
 			<maml:name>Database</maml:name>
 			<maml:description>
-				<maml:para>This is the database object from which the assembly is to be removed.</maml:para>
+				<maml:para>The database object from which to remove the assembly</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">Database</command:parameterValue>
 			<dev:type>
 				<maml:name>Database</maml:name>
-				<maml:uri/>
-			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
-		</command:parameter>
-	</command:parameters>
-	<command:inputTypes>
-		<command:inputType>
-			<dev:type>
-				<maml:name></maml:name>
-				<maml:uri/>
-				<maml:description>
-					<maml:para></maml:para>
-				</maml:description>
-			</dev:type>
-			<maml:description></maml:description>
-		</command:inputType>
-	</command:inputTypes>
-	<command:returnValues>
-		<command:returnValue>
-			<dev:type>
-				<maml:name></maml:name>
-				<maml:uri />
-				<maml:description>
-					<maml:para></maml:para>
-				</maml:description>
-			</dev:type>
-			<maml:description></maml:description>
-		</command:returnValue>
-	</command:returnValues>
-	<command:terminatingErrors>
-	</command:terminatingErrors>
-	<command:nonTerminatingErrors>
-	</command:nonTerminatingErrors>
-	<maml:alertSet>
-		<maml:title></maml:title>
-		<maml:alert>
-			<maml:para></maml:para>
-		</maml:alert>
-	</maml:alertSet>
-	<command:examples>
-	</command:examples>
-	<maml:relatedLinks>
-		<maml:navigationLink>
-			<maml:linkText>Get-AsServer</maml:linkText>
-			<maml:uri/>
-		</maml:navigationLink>
-		<maml:navigationLink>
-			<maml:linkText>Get-AsDatabase</maml:linkText>
-			<maml:uri/>
-		</maml:navigationLink>
-	</maml:relatedLinks>
-</command:command>
-<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
-<!--Generated by Help Cmdlet Editor-->
-	<command:details>
-		<command:name>Send-XmlaDiscover</command:name>
-		<maml:description>
-			<maml:para>Runs a Discover command against an Analysis Services server</maml:para>
-		</maml:description>
-		<maml:copyright>
-           <maml:para />
-		<!--Add copy right info here.-->
-		</maml:copyright>
-		<command:verb>Send</command:verb>
-		<command:noun>XmlaDiscover</command:noun>
-		<!--Add Dev version info here.-->
-		<dev:version />
-	</command:details>
-	<maml:description>
-	<!--This is the Description section-->
-		<maml:para>Runs the specified discover command against an Analysis Services server and returns the result as a collection of PSObjects.</maml:para>
-	</maml:description>
-	<command:syntax>		<command:syntaxItem>
-			<maml:name>Send-XmlaDiscover</maml:name>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
-				<maml:name>Raw</maml:name>
-				<maml:description>
-					<maml:para></maml:para>
-				</maml:description>
-			</command:parameter>
-			<command:parameter required = "true" variableLength = "false" globbing = "false" pipelineInput = "true (ByValue)" position = "1" >
-				<maml:name>ServerName</maml:name>
-				<maml:description>
-					<maml:para>The name of the Analysis Server against which you wish to run the particular discover command.</maml:para>
-				</maml:description>
-			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
-			</command:parameter>
-			<command:parameter required = "true" variableLength = "false" globbing = "false" pipelineInput = "false" position = "2" >
-				<maml:name>RowsetName</maml:name>
-				<maml:description>
-					<maml:para></maml:para>
-				</maml:description>
-			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
-			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
-				<maml:name>Restrictions</maml:name>
-				<maml:description>
-					<maml:para></maml:para>
-				</maml:description>
-			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
-			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
-				<maml:name>Properties</maml:name>
-				<maml:description>
-					<maml:para></maml:para>
-				</maml:description>
-			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
-			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
-				<maml:name>WhatIf</maml:name>
-				<maml:description>
-					<maml:para></maml:para>
-				</maml:description>
-			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
-				<maml:name>Confirm</maml:name>
-				<maml:description>
-					<maml:para></maml:para>
-				</maml:description>
-			</command:parameter>
-		</command:syntaxItem>
-	</command:syntax>
-	<command:parameters>
-		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
-			<maml:name>Raw</maml:name>
-			<maml:description>
-				<maml:para></maml:para>
-			</maml:description>
-			<dev:type>
-				<maml:name>SwitchParameter</maml:name>
-				<maml:uri/>
-			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
-		</command:parameter>
-		<command:parameter required="true" variableLength="false" globbing="false" pipelineInput="true (ByValue)" position="1">
-			<maml:name>ServerName</maml:name>
-			<maml:description>
-				<maml:para>The name of the Analysis Server against which you wish to run the particular discover command.</maml:para>
-			</maml:description>
-			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
-			<dev:type>
-				<maml:name>String</maml:name>
-				<maml:uri/>
-			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
-		</command:parameter>
-		<command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="2">
-			<maml:name>RowsetName</maml:name>
-			<maml:description>
-				<maml:para></maml:para>
-			</maml:description>
-			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
-			<dev:type>
-				<maml:name>String</maml:name>
-				<maml:uri/>
-			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
-		</command:parameter>
-		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
-			<maml:name>Restrictions</maml:name>
-			<maml:description>
-				<maml:para></maml:para>
-			</maml:description>
-			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
-			<dev:type>
-				<maml:name>String</maml:name>
-				<maml:uri/>
-			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
-		</command:parameter>
-		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
-			<maml:name>Properties</maml:name>
-			<maml:description>
-				<maml:para></maml:para>
-			</maml:description>
-			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
-			<dev:type>
-				<maml:name>String</maml:name>
-				<maml:uri/>
-			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
-		</command:parameter>
-		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
-			<maml:name>WhatIf</maml:name>
-			<maml:description>
-				<maml:para></maml:para>
-			</maml:description>
-			<dev:type>
-				<maml:name>SwitchParameter</maml:name>
-				<maml:uri/>
-			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
-		</command:parameter>
-		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
-			<maml:name>Confirm</maml:name>
-			<maml:description>
-				<maml:para></maml:para>
-			</maml:description>
-			<dev:type>
-				<maml:name>SwitchParameter</maml:name>
 				<maml:uri/>
 			</dev:type>
 			<dev:defaultValue></dev:defaultValue>

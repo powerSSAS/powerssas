@@ -1,6 +1,5 @@
 Imports System.Management.Automation
 Imports System.Xml
-Imports Microsoft.AnalysisServices.Xmla
 
 Namespace Cmdlets
     <Cmdlet(VerbsCommon.Clear, "ASSession", SupportsShouldProcess:=True, DefaultParameterSetName:="bySession")> _
@@ -85,16 +84,19 @@ Namespace Cmdlets
 
             WriteVerbose("Cancelling Session where: " & restriction)
 
-            Dim xc As New Microsoft.AnalysisServices.Xmla.XmlaClient
-            xc.Connect("Data Source=" & servername)
+            'Dim xc As New Microsoft.AnalysisServices.Xmla.XmlaClient
+            'xc.Connect("Data Source=" & servername)
+            Dim svr As New Microsoft.AnalysisServices.Server()
+            svr.Connect(servername)
+
             Dim res As String = ""
             Try
                 If Me.ShouldProcess(String.Format("Server: {0} Restriction: {1}", servername, restriction), "Clear-ASSession") Then
-                    res = xc.Send(cancelCmd, Nothing)
+                    svr.Execute(cancelCmd)
                 End If
             Finally
-                If Not xc Is Nothing Then
-                    xc.Disconnect()
+                If Not svr Is Nothing Then
+                    svr.Disconnect()
                 End If
             End Try
 

@@ -5,7 +5,7 @@ Imports System.Xml
 Imports System.Globalization
 
 Namespace Cmdlets
-    <Cmdlet(VerbsCommon.Get, "ASLock", DefaultParameterSetName:="byObject")> _
+    <Cmdlet(VerbsCommon.Get, "ASLock")> _
     Public Class CmdletGetASLock
         Inherits CmdletDiscoverBase
 
@@ -55,7 +55,7 @@ Namespace Cmdlets
             Set(ByVal value As SwitchParameter)
                 mWriteLockSwitch = value
                 mLockTypeFilter = mLockTypeFilter Xor LockTypes.LOCK_WRITE
-                mLockFilterset = True
+                mLockFilterSet = True
             End Set
         End Property
 
@@ -112,26 +112,26 @@ Namespace Cmdlets
 
         Protected Overrides Sub ProcessRecord()
             Dim xLock As New Utils.XmlaDiscoverLocks
-            If mLockFilterSet And Not XmlaRestrictions.Contains("<LOCK_TYPE>") Then
-                XmlaRestrictions &= "<LOCK_TYPE>" & mLockTypeFilter.ToString() & "</LOCK_TYPE>"
+            If mLockFilterSet And XmlaRestrictions.Find("LOCK_TYPE") Is Nothing Then
+                XmlaRestrictions.Add("LOCK_TYPE", mLockTypeFilter.ToString())
             End If
-            If Not XmlaRestrictions.Contains("<LOCK_STATUS>") Then
+            If XmlaRestrictions.Find("<LOCK_STATUS>") Is Nothing Then
                 If mGrantedStatus.IsPresent And Not mWaitingStatus.IsPresent Then
-                    XmlaRestrictions &= "<LOCK_STATUS>1</LOCK_STATUS>" 'TODO - is granted 1 ?
+                    XmlaRestrictions.Add("LOCK_STATUS", 1)
                 ElseIf mWaitingStatus.IsPresent And Not mGrantedStatus.IsPresent Then
-                    XmlaRestrictions &= "<LOCK_STATUS>0</LOCK_STATUS>"
+                    XmlaRestrictions.Add("LOCK_STATUS", 0)
                 End If
             End If
-            If mMinimumMilliseconds > 0 And Not XmlaRestrictions.Contains("<LOCK_MIN_TOTAL_MS>") Then
-                XmlaRestrictions &= "<LOCK_MIN_TOTAL_MS>" & mMinimumMilliseconds.ToString() & "</LOCK_MIN_TOTAL_MS>"
+            If mMinimumMilliseconds > 0 And XmlaRestrictions.Find("LOCK_MIN_TOTAL_MS") Is Nothing Then
+                XmlaRestrictions.Add("LOCK_MIN_TOTAL_MS", mMinimumMilliseconds.ToString())
             End If
-            If mSPID > 0 And Not XmlaRestrictions.Contains("<SPID>") Then
-                XmlaRestrictions &= "<SPID>" & mSPID.ToString() & "</SPID>"
+            If mSPID > 0 And XmlaRestrictions.Find("SPID") Is Nothing Then
+                XmlaRestrictions.Add("SPID", mSPID.ToString())
             End If
-            If mTransactionID.Length > 0 And Not XmlaRestrictions.Contains("<TRANSACTION_ID>") Then
-                XmlaRestrictions &= "<TRANSACTION_ID>" & mTransactionID & "</TRANSACTION_ID>"
+            If mTransactionID.Length > 0 And XmlaRestrictions.Find("TRANSACTION_ID") Is Nothing Then
+                XmlaRestrictions.Add("TRANSACTION_ID", mTransactionID)
             End If
-            xLock.Discover(Me.DiscoverRowset, ServerName, XmlaRestrictions, XmlaProperties, AddressOf Me.OutputObject)
+            xLock.Discover(Me.DiscoverRowset, ServerName, XmlaRestrictions, "", AddressOf Me.OutputObject)
         End Sub
 
 

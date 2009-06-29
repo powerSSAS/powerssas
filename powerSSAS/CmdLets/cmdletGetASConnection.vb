@@ -1,4 +1,5 @@
 Imports System.Management.Automation
+Imports Microsoft.AnalysisServices.AdomdClient
 Imports Gosbell.PowerSSAS.Cmdlets
 
 Namespace Cmdlets
@@ -17,15 +18,16 @@ Namespace Cmdlets
             End Set
         End Property
 
-        Public Overrides Property XmlaRestrictions() As String
+        Public Overrides Property XmlaRestrictions() As AdomdRestrictionCollection
             Get
-                If MyBase.XmlaRestrictions.Length = 0 AndAlso mID.Length > 0 Then
-                    Return "<CONNECTION_ID>" & mID & "</CONNECTION_ID>"
+                If MyBase.XmlaRestrictions.Count = 0 AndAlso mID.Length > 0 Then
+                    MyBase.XmlaRestrictions.Add("CONNECTION_ID", mID)
+                    Return MyBase.XmlaRestrictions
                 Else
-                    Return ""
+                    Return Nothing
                 End If
             End Get
-            Set(ByVal value As String)
+            Set(ByVal value As AdomdRestrictionCollection)
                 MyBase.XmlaRestrictions = value
             End Set
         End Property

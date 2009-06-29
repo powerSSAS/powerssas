@@ -292,7 +292,7 @@ Public Class PowerSSASProvider
                 ElseIf TypeOf itm Is Server _
                 AndAlso CaseInsensitiveMatch(pathChunks(i), "sessions") Then
                     Dim xds As New Utils.XmlaDiscoverSessions
-                    itm = xds.Discover("DISCOVER_SESSIONS", CType(itm, Server).Name, "", "")
+                    itm = xds.Discover("DISCOVER_SESSIONS", CType(itm, Server).Name, Nothing, Nothing)
                 Else
                     itm = GetProperty(itm, pathChunks(i))
                 End If
@@ -414,7 +414,7 @@ Public Class PowerSSASProvider
             If Not props.ContainsKey("Sessions") Then
                 Dim xds As New Utils.XmlaDiscoverSessions
 
-                Dim sess As Collection(Of Object) = xds.Discover("DISCOVER_SESSIONS", CType(Me.PSDriveInfo, AmoDriveInfo).AmoServer.Name, "", "")
+                Dim sess As Collection(Of Object) = xds.Discover("DISCOVER_SESSIONS", CType(Me.PSDriveInfo, AmoDriveInfo).AmoServer.Name, Nothing, Nothing)
                 props.Add("Sessions", New CollectionProperty("Sessions", sess, GetType(Session)))
             End If
         End If
