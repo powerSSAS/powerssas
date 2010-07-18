@@ -46,12 +46,19 @@ Namespace Utils
                     Else
                         conn.Open()
                         ds = conn.GetSchemaDataSet(command.ToUpper(), restrictions)
+                        Dim cmd As Microsoft.AnalysisServices.AdomdClient.AdomdCommand
+                        'TODO - partially implemented
+                        'cmd.ExecuteXmlReader(
+                        Dim da As New Microsoft.AnalysisServices.AdomdClient.AdomdDataAdapter(cmd)
+                        Dim dt As New System.Data.DataTable("SchemaRowset")
+                        da.Fill(dt)
+                        outputCallback(dt)
                     End If
 
                     'If rawResultSet Then
                     '    outputCallback(res)
                     'Else
-                    ProcessDataSet(serverName, ds, outputCallback)
+                    'ProcessDataSet(serverName, ds, outputCallback)
                     'End If
                 Finally
                     conn.Close()
@@ -109,12 +116,25 @@ Namespace Utils
             Finally
                 conn.Close()
             End Try
+
             Return GetObjectListFromDataSet(serverName, ds)
         End Function
 
         Private Function GetObjectListFromDataSet(ByVal serverName As String, ByVal ds As DataSet) As System.Collections.ObjectModel.Collection(Of Object)
             'TODO Implement GetObjectListFromDataSet
-            Throw New NotImplementedException("GetObjectListFromDataSet")
+            Dim coll As New System.Collections.ObjectModel.Collection(Of Object)
+            For Each dr As DataRow In ds.Tables(0).Rows
+                Dim o As New PSObject
+                For Each dc As DataColumn In ds.Tables(0).Columns
+                    o.Properties.Add(New PSNoteProperty(dc.ColumnName, dr(dc.ColumnName)))
+                Next
+                If Not ds.Tables(0).Columns.Contains("Name") Then
+                    o.Properties.Add(New PSNoteProperty("Name", dr(0)))
+                End If
+                coll.Add(o)
+            Next
+            Return coll
+            'Throw New NotImplementedException("GetObjectListFromDataSet")
         End Function
 
         '// This routine is fairly "brute force", creating an XmlDocument and 

@@ -76,20 +76,26 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
-  <ItemGroup Condition="'$(SqlServerTargetEdition)'=='2005'">
-    <!--<Message Text="Using 2005 References" Importance="high" />-->
-    <Reference Include="Microsoft.AnalysisServices, Version=9.0.242.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.AnalysisServices.AdomdClient, Version=9.0.242.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(SqlServerTargetEdition)'=='2008'">
-    <!--<Message Text="Using 2008 References" Importance="high" /> -->
-    <Reference Include="Microsoft.AnalysisServices, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.AnalysisServices.AdomdClient, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
-  </ItemGroup>
+  <Choose>
+    <When Condition="'$(SqlServerTargetEdition)'=='2005'">
+      <ItemGroup>
+        <!--<Message Text="Using 2005 References" Importance="high" />-->
+        <Reference Include="Microsoft.AnalysisServices, Version=9.0.242.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+          <!-- <Private>True</Private> -->
+        </Reference>
+        <Reference Include="Microsoft.AnalysisServices.AdomdClient, Version=9.0.242.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <!--<Message Text="Using 2008 References" Importance="high" /> -->
+        <Reference Include="Microsoft.AnalysisServices, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">
+          <!-- <Private>True</Private> -->
+        </Reference>
+        <Reference Include="Microsoft.AnalysisServices.AdomdClient, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
   <ItemGroup>
     <Import Include="System" />
     <Import Include="System.Collections" />
@@ -101,6 +107,8 @@
     <Compile Include="CmdLets\cmdletAddASClrAssembly.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CmdLets\cmdletBackupASDatabase.vb" />
+    <Compile Include="CmdLets\cmdletClearASCache.vb" />
     <Compile Include="CmdLets\cmdletClearASSession.vb" />
     <Compile Include="CmdLets\cmdletGetASConnection.vb" />
     <Compile Include="CmdLets\cmdletGetASCubePermission.vb">
@@ -134,6 +142,7 @@
     <Compile Include="CmdLets\cmdletGetASCube.vb" />
     <Compile Include="CmdLets\cmdletGetASLock.vb" />
     <Compile Include="CmdLets\cmdletGetASTrace.vb" />
+    <Compile Include="CmdLets\cmdletRestoreASDatabase.vb" />
     <Compile Include="ConnectionFactory.vb">
       <SubType>Code</SubType>
     </Compile>
@@ -183,10 +192,15 @@
     <Content Include="FormatData\powerSSAS.Format.Ps1Xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Build\Build_PowerSSAS.ps1" />
+    <None Include="powerSSAS.psd1" />
     <None Include="Scripts\powerSSAS Examples.ps1">
       <SubType>Form</SubType>
     </None>
     <None Include="Scripts\setup-powerSSASProvider.ps1" />
+    <None Include="Setup\License.rtf" />
+    <None Include="Setup\powerSSAS codeplex banner.pdn" />
+    <None Include="Setup\powerSSAS.pdn" />
     <None Include="Setup\powerSSAS_Setup.nsi" />
     <Content Include="TypeData\powerSSAS.Types.Ps1Xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -211,6 +225,10 @@
   <ItemGroup>
     <Content Include="Help\about_powerSSAS.help.txt" />
     <Content Include="powerSSAS.ico" />
+    <Content Include="Setup\powerSSAS.bmp" />
+    <Content Include="Setup\powerSSASHeader.bmp" />
+    <Content Include="Setup\powerSSASHeader.png" />
+    <Content Include="Setup\powerSSAS_banner.gif" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -238,9 +256,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Build\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
