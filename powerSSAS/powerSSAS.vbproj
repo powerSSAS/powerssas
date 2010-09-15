@@ -193,7 +193,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Build\Build_PowerSSAS.ps1" />
-    <None Include="powerSSAS.psd1" />
+    <None Include="powerSSAS.psd1">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Scripts\powerSSAS Examples.ps1">
       <SubType>Form</SubType>
     </None>

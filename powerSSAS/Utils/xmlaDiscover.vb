@@ -46,13 +46,7 @@ Namespace Utils
                     Else
                         conn.Open()
                         ds = conn.GetSchemaDataSet(command.ToUpper(), restrictions)
-                        Dim cmd As Microsoft.AnalysisServices.AdomdClient.AdomdCommand
-                        'TODO - partially implemented
-                        'cmd.ExecuteXmlReader(
-                        Dim da As New Microsoft.AnalysisServices.AdomdClient.AdomdDataAdapter(cmd)
-                        Dim dt As New System.Data.DataTable("SchemaRowset")
-                        da.Fill(dt)
-                        outputCallback(dt)
+                        outputCallback(ds.Tables.Item(0))
                     End If
 
                     'If rawResultSet Then
