@@ -62,7 +62,7 @@
     <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup>
-    <SqlServerTargetEdition>2005</SqlServerTargetEdition>
+    <SqlServerTargetEdition>2008</SqlServerTargetEdition>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -227,10 +227,22 @@
   <ItemGroup>
     <Content Include="Help\about_powerSSAS.help.txt" />
     <Content Include="powerSSAS.ico" />
+    <None Include="Resources\ssassort.xslt" />
     <Content Include="Setup\powerSSAS.bmp" />
     <Content Include="Setup\powerSSASHeader.bmp" />
     <Content Include="Setup\powerSSASHeader.png" />
     <Content Include="Setup\powerSSAS_banner.gif" />
+    <Compile Include="CmdLets\cmdletGetASProject.vb" />
+    <Compile Include="CmdLets\cmdletProcessASObject.vb" />
+    <Compile Include="CmdLets\cmdletRemoveASRole.vb" />
+    <Compile Include="CmdLets\cmdletScriptASRole.vb" />
+    <Compile Include="SsasHelper\ProjectHelper.vb" />
+    <Compile Include="SsasHelper\XmlHelper.vb" />
+    <Compile Include="Utils\CellsetCommand.vb" />
+    <Compile Include="Utils\PerfCounter.vb" />
+    <Compile Include="Utils\QueryCommand.vb" />
+    <Compile Include="Utils\ICommand.vb" />
+    <Compile Include="Utils\ProcessCommand.vb" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

@@ -1,11 +1,20 @@
 Imports System.Management.Automation
 Imports Microsoft.AnalysisServices
 Imports Microsoft.AnalysisServices.AdomdClient
+Imports System
+Imports System.Threading
 
 Namespace Cmdlets
     <Cmdlet("Invoke", "ASMDX")> _
     Public Class cmdletInvokeASMDX
         Inherits Cmdlet
+
+        Private evStat As New AutoResetEvent(False) 'ManualResetEvent(False)
+        Private evExit As New AutoResetEvent(False)
+        Private evts As WaitHandle()
+        Private pr_sync As New Object()
+        Private m_event As TraceEventArgs
+        Private m_benchmarkresult As New BenchmarkResult()
 
         Private mQuery As String = ""
         <Parameter(Position:=0, Mandatory:=True)> _
@@ -78,14 +87,15 @@ Namespace Cmdlets
             If mConnStr.Length > 0 Then
                 connStr = mConnStr
             Else
-                connStr = ConnectionFactory.ConnectToServer(mServerName).ConnectionString
-                connStr &= ";Initial Catalog=" & mDatabaseName
-
+                Dim svr As Server = ConnectionFactory.ConnectToServer(mServerName)
+                connStr = svr.ConnectionString & ";Initial Catalog=" & mDatabaseName '& ";SessionId=" & svr.SessionID
             End If
             Dim conn As AdomdConnection = New AdomdConnection(connStr)
             conn.Open()
+
             Try
                 Dim cmd As New AdomdCommand(mQuery, conn)
+
                 If mBenchmark.IsPresent Then
                     ReturnBenchmarkResults(cmd)
                 Else
@@ -96,54 +106,59 @@ Namespace Cmdlets
                     End If
                 End If
             Finally
-                conn.Close()
+                conn.Close(False)
             End Try
         End Sub
 
         Private Sub ReturnBenchmarkResults(ByVal cmd As AdomdCommand)
-            Dim iRowCnt As Integer
-            Dim startTime As DateTime
-            Dim endTime As DateTime
-            Dim duration As TimeSpan
-
-            '@"<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
-            '  <Body>
-            '    <Execute xmlns="urn:schemas-microsoft-com:xml-analysis">
-            '      <Command>
-            '        <Statement>
-            '          Select [Measures].[Internet Sales Amount] ON 0 FROM [Adventure Works]
-            '        </Statement>
-            '      </Command>
-            '      <Properties>
-            '        <PropertyList>
-            '          <Catalog>Adventure Works DW 2008</Catalog>
-            '          <!-- ### the default Format is MultiDimensional, Tabular gives you a flattened resultset -->
-            '          <!-- <Format>Tabular</Format> -->
-            '          <!-- ### the default Content is to return DataAndSchema, but you can turn either of these off-->
-            '          <!--<Content>Data</Content> -->
-            '        </PropertyList>
-            '      </Properties>
-            '    </Execute>
-            '  </Body>
-            '</Envelope>"
-
             Dim svr As Server = ConnectionFactory.ConnectToServer(ServerName)
             Dim trc As SessionTrace = svr.SessionTrace
-            startTime = DateTime.Now()
-            Dim rdr As AdomdDataReader = cmd.ExecuteReader()
-            While rdr.Read
-                iRowCnt += 1
-            End While
-            endTime = DateTime.Now()
-            duration = endTime - startTime
-            Dim pso As New PSObject
-            pso.Properties.Add(New PSNoteProperty("StartTime", startTime))
-            pso.Properties.Add(New PSNoteProperty("EndTime", endTime))
-            pso.Properties.Add(New PSNoteProperty("Duration", duration.TotalMilliseconds))
-            pso.Properties.Add(New PSNoteProperty("Columns", rdr.FieldCount))
-            pso.Properties.Add(New PSNoteProperty("Rows", iRowCnt))
+            Const EXIT_HANDLE As Integer = 0
+            'TODO - implement IsTabular parameter when benchmarking so that we can 
+            '       compare flattened vs. Native recordsets.
+            Dim asyncCmd As CellsetCommand = New CellsetCommand(svr, cmd, False)
 
-            WriteObject(pso)
+            AddHandler asyncCmd.QueryStatus, AddressOf OnQueryStatus
+            AddHandler asyncCmd.TraceEvent, AddressOf OnTraceEvent
+            AddHandler asyncCmd.Completed, AddressOf OnCompleted
+            ReDim evts(1)
+            evts(EXIT_HANDLE) = evExit
+            evts(1) = evStat
+
+            '// Start the Async command
+            asyncCmd.Execute()
+
+            '// This loop executes each time the evStat waithandle is signaled
+            '// inbetween that the WaitAny call is blocking. When the exit handle
+            '// is signalled then the loop exits and the rest of the code is executed.
+            While WaitHandle.WaitAny(evts) <> EXIT_HANDLE
+                SyncLock pr_sync
+                    AggregateEvent(m_event)
+                End SyncLock
+            End While
+
+            'Dim rdr As AdomdDataReader = asyncCmd.AdomdReader
+            'While rdr.Read
+            '    iRowCnt += 1
+            'End While
+
+            Dim cs As CellSet = asyncCmd.AdomdCellset
+            m_benchmarkresult.Columns = GetMemberCount(cs, 0)
+            m_benchmarkresult.Rows = GetMemberCount(cs, 1)
+            m_benchmarkresult.CellsCalculated = asyncCmd.CellsCalculated
+
+            WriteObject(m_benchmarkresult)
+
+            'endTime = DateTime.Now()
+            'duration = endTime - startTime
+            'Dim pso As New PSObject
+            'pso.Properties.Add(New PSNoteProperty("StartTime", startTime))
+            'pso.Properties.Add(New PSNoteProperty("EndTime", endTime))
+            'pso.Properties.Add(New PSNoteProperty("Duration", duration.TotalMilliseconds))
+            'pso.Properties.Add(New PSNoteProperty("Columns", rdr.FieldCount))
+            'pso.Properties.Add(New PSNoteProperty("Rows", iRowCnt))
+
+            'WriteObject(pso)
         End Sub
 
         Private Sub ReturnCollectionOfPsObjects(ByVal cmd As AdomdCommand)
@@ -165,5 +180,69 @@ Namespace Cmdlets
             WriteObject(dt)
         End Sub
 
+        Private Sub OnTraceEvent(ByVal stat As TraceEventArgs)
+            SyncLock pr_sync
+                m_event = stat
+                evStat.Set()
+            End SyncLock
+        End Sub
+
+        Private Sub OnCompleted()
+            SyncLock pr_sync
+                evExit.Set()
+            End SyncLock
+        End Sub
+
+        Private Sub OnQueryStatus(ByVal status As String)
+            Me.WriteProgress(New ProgressRecord(0, "MDX Benchmark", status))
+        End Sub
+
+        '// This routine aggregates the trace events that are captured during query execution
+        Private Sub AggregateEvent(ByVal e As TraceEventArgs)
+            Select Case e.EventClass
+                Case TraceEventClass.QueryEnd
+                    If e.EventSubclass = TraceEventSubclass.MdxQuery Then
+                        m_benchmarkresult.QueryDurationMS = e.Duration
+                        m_benchmarkresult.Endtime = e.CurrentTime
+                    End If
+                Case TraceEventClass.QuerySubcube
+                    m_benchmarkresult.QuerySubcubeDurationMS += e.Duration
+                    m_benchmarkresult.querySubcubeCount += 1
+                Case TraceEventClass.GetDataFromAggregation
+                    m_benchmarkresult.AggHit += 1
+                Case TraceEventClass.GetDataFromCache
+                    m_benchmarkresult.CacheHit += 1
+                Case TraceEventClass.QueryBegin
+                    m_benchmarkresult.StartTime = e.CurrentTime
+            End Select
+        End Sub
+
+        Private Function GetMemberCount(ByVal cs As CellSet, ByVal axis As Integer) As Long
+            Return cs.Axes(axis).Set.Tuples.Count
+        End Function
+    End Class
+
+    'TODO - formatting of results, should this be done with powershell format file?
+    Public Class BenchmarkResult
+        Public QueryDurationMS As Long
+        Public QuerySubcubeDurationMS As Long
+        Public QuerySubcubeCount As Long
+        Public CacheHit As Long
+        Public AggHit As Long
+        Public Rows As Long
+        Public Columns As Long
+        Public StartTime As Date
+        Public Endtime As Date
+        Public CellsCalculated As Long
+        Public ReadOnly Property FERatio() As Double
+            Get
+                Return (QueryDurationMS - QuerySubcubeDurationMS) / QueryDurationMS
+            End Get
+        End Property
+        'Public ReadOnly Property QueryDuration() As TimeSpan
+        '    Get
+        '        Return New TimeSpan(0, 0, 0, 0, QueryDurationMS)
+        '    End Get
+        'End Property
     End Class
 End Namespace

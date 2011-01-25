@@ -80,7 +80,7 @@ Namespace Cmdlets
     End Class
 End Namespace
 
-Public Class EventSubClass
+Public Class EventSubclass
     Public EventName As String
     Public EventID As String
     Public EventDescription As String

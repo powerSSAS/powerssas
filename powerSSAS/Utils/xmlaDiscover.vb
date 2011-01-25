@@ -205,6 +205,7 @@ Namespace Utils
             Dim pso As New PSObject()
             'Dim row As XPath.XPathNavigator = inputRow.CreateNavigator()
 
+            'For Each n As XmlNode In row.ChildNodes
             For Each n As XmlNode In row.ChildNodes
                 If (rowSchema.ContainsKey(n.LocalName)) Then
                     'pso.Properties.Add(New PSNoteProperty(e.LocalName, convertObj(e.InnerText, row.Item(e.LocalName))))
