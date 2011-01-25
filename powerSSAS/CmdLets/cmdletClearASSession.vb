@@ -84,6 +84,8 @@ Namespace Cmdlets
 
             WriteVerbose("Cancelling Session where: " & restriction)
 
+            'TODO - do we need to check that the user does not cancel themselves?
+
             'Dim xc As New Microsoft.AnalysisServices.Xmla.XmlaClient
             'xc.Connect("Data Source=" & servername)
             Dim svr As New Microsoft.AnalysisServices.Server()
@@ -92,6 +94,7 @@ Namespace Cmdlets
             Dim res As String = ""
             Try
                 If Me.ShouldProcess(String.Format("Server: {0} Restriction: {1}", servername, restriction), "Clear-ASSession") Then
+                    'TODO - should i use svr.CancelSession(...) instead?
                     svr.Execute(cancelCmd)
                 End If
             Finally

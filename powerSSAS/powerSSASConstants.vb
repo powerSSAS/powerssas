@@ -20,6 +20,7 @@ Public NotInheritable Class PowerSSASNouns
     End Function
 End Class
 
+<Flags()> _
 Public Enum LockTypes
     LOCK_NONE = &H0               ' No lock.
     LOCK_SESSION_LOCK = &H1       ' Inactive session; does not interfere with other locks.

@@ -125,6 +125,7 @@ Namespace Types
         Public ReadOnly Property LockTypeDescription() As String
             Get
                 Dim mList As New List(Of String)
+
                 If (mLockType And LockTypes.LOCK_WRITE) = LockTypes.LOCK_WRITE Then Return "WRITE"
                 If (mLockType And LockTypes.LOCK_SESSION_LOCK) = LockTypes.LOCK_SESSION_LOCK Then Return "SESSION"
                 If (mLockType And LockTypes.LOCK_READ) = LockTypes.LOCK_READ Then Return "READ"
@@ -135,6 +136,7 @@ Namespace Types
                 If (mLockType And LockTypes.LOCK_COMMIT_INPROGRESS) = LockTypes.LOCK_COMMIT_INPROGRESS Then mList.Add("COMMIT_INPROGRESS")
                 If (mLockType And LockTypes.LOCK_COMMIT_ABORTABLE) = LockTypes.LOCK_COMMIT_ABORTABLE Then Return "COMMIT_ABORTABLE"
                 If (mLockType And LockTypes.LOCK_NONE) = LockTypes.LOCK_NONE Then Return "NONE"
+
                 Return ""
             End Get
         End Property

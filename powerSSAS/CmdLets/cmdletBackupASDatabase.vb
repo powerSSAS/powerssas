@@ -58,15 +58,14 @@ Namespace Cmdlets
 
             If mDatabaseName.Length = 0 Then
                 '// if no specific database is requested, return the whole collection.
-                For Each db As Database In mSvr.Databases
-                    WriteObject(db)
-                Next db
+                WriteError(New ErrorRecord(New ArgumentException("You must specify the name of the database to backup"), "Backup Error", ErrorCategory.InvalidArgument, Me))
             Else
                 Dim db As Database = mSvr.Databases.GetByName(mDatabaseName)
                 If db Is Nothing Then
                     WriteError(New ErrorRecord(New ArgumentException("The database " & mDatabaseName & " could not be found"), "Backup Error", ErrorCategory.InvalidArgument, Me))
                 Else
                     '// TODO
+                    '//db.Backup()
                 End If
 
             End If
