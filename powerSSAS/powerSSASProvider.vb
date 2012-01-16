@@ -259,7 +259,8 @@ Public Class PowerSSASProvider
 
 #Region " Helper Functions "
 
-    <System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")> Private Function GetAmoDriveInternal(ByVal path As String) As AmoDriveInfo
+    <System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")> _
+    Private Function GetAmoDriveInternal(ByVal path As String) As AmoDriveInfo
         Dim pathBits() As String = path.Split(PATH_SEPARATOR.ToCharArray())
         If Me.PSDriveInfo Is Nothing Then
             For Each drv As PSDriveInfo In Me.ProviderInfo.Drives

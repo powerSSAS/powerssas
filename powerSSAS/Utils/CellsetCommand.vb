@@ -5,7 +5,7 @@ Imports System
 Imports Microsoft.AnalysisServices.AdomdClient
 
 Public Class CellsetCommand
-    Implements ICommand
+    Implements ICommand, IDisposable
 
     '// Private variables
     Private Delegate Function ExecuteCellset() As CellSet
@@ -24,10 +24,12 @@ Public Class CellsetCommand
     Private m_IsTabular As Boolean
     '// Public variables (really should be properties)
     Public AdomdCellset As CellSet
-    Public AdomdReader As AdomdDataReader
+    Private AdomdReader As AdomdDataReader
     Public CellsCalculated As Long
     Public MemoryUsage As Long
     Public PerfCountersStable As Boolean
+    Public FlatCacheInserts As Long
+    Public NonEmptyUnoptimized As Long
 
     '// Events
     Event TraceEvent(ByVal status As TraceEventArgs)
@@ -72,21 +74,25 @@ Public Class CellsetCommand
 
         RaiseEvent QueryStatus("Waiting for Trace subscription")
 
-        Dim res As AdomdRestrictionCollection = CreatePerfCounterRestriction(m_svr, "MDX\Total Cells Calculated")
+        'Dim res As AdomdRestrictionCollection = CreatePerfCounterRestriction(m_svr, "MDX\Total Cells Calculated")
         'Dim dt As DataTable
 
-        m_Counters.Add("Memory\Memory Usage KB", New PerfCounter(0))
-        m_Counters.Add("Storage Engine Query\Total queries answered", New PerfCounter(0))
-        m_Counters.Add("MDX\Total Cells Calculated", New PerfCounter(0))
+        m_Counters.Add("Memory\Memory Usage KB", New PerfCounter("Memory\Memory Usage KB", m_svr, m_cmd))
+        m_Counters.Add("Storage Engine Query\Total queries answered", New PerfCounter("Storage Engine Query\Total queries answered", m_svr, m_cmd))
+        m_Counters.Add("MDX\Total Cells Calculated", New PerfCounter("MDX\Total Cells Calculated", m_svr, m_cmd))
+        m_Counters.Add("MDX\Total flat cache inserts", New PerfCounter("MDX\Total flat cache inserts", m_svr, m_cmd))
+        m_Counters.Add("MDX\Total NON EMPTY unoptimized", New PerfCounter("MDX\Total NON EMPTY unoptimized", m_svr, m_cmd))
 
-        m_Counters("Memory\Memory Usage KB").InitialValue = GetPerfCounter(m_svr, m_cmd, "Memory\Memory Usage KB")
-        m_Counters("Storage Engine Query\Total queries answered").InitialValue = GetPerfCounter(m_svr, m_cmd, "Storage Engine Query\Total queries answered")
-        m_Counters("MDX\Total Cells Calculated").InitialValue = GetPerfCounter(m_svr, m_cmd, "MDX\Total Cells Calculated")
+        'm_Counters("Memory\Memory Usage KB").InitialValue = GetPerfCounter(m_svr, m_cmd, "Memory\Memory Usage KB")
+        'm_Counters("Storage Engine Query\Total queries answered").InitialValue = GetPerfCounter(m_svr, m_cmd, "Storage Engine Query\Total queries answered")
+        'm_Counters("MDX\Total Cells Calculated").InitialValue = GetPerfCounter(m_svr, m_cmd, "MDX\Total Cells Calculated")
+        'm_Counters("MDX\Total flat cache inserts").InitialValue = GetPerfCounter(m_svr, m_cmd, "MDX\Total flat cache inserts")
+        'm_Counters("MDX\Total NON EMPTY unoptimized").InitialValue = GetPerfCounter(m_svr, m_cmd, "MDX\Total NON EMPTY unoptimized")
 
         '// loop until trace has started and we get a DISCOVER_BEGIN event from the event handler
         While Not m_FirstTraceEventRecieved
             System.Threading.Thread.Sleep(1000)
-            m_Counters("MDX\Total Cells Calculated").InitialValue = GetPerfCounter(m_svr, m_cmd, "MDX\Total Cells Calculated")        
+            m_Counters("MDX\Total Cells Calculated").UpdateInitialValue() '= GetPerfCounter(m_svr, m_cmd, "MDX\Total Cells Calculated")        
         End While
 
         RaiseEvent QueryStatus("Running Query")
@@ -120,13 +126,18 @@ Public Class CellsetCommand
             RemoveHandler m_trc.OnEvent, AddressOf OnTraceEvent
             RemoveHandler m_trc.Stopped, AddressOf OnTraceStoppedEvent
 
-            m_Counters("Memory\Memory Usage KB").FinalValue = GetPerfCounter(m_svr, m_cmd, "Memory\Memory Usage KB")
-            m_Counters("Storage Engine Query\Total queries answered").FinalValue = GetPerfCounter(m_svr, m_cmd, "Storage Engine Query\Total queries answered")
-            m_Counters("MDX\Total Cells Calculated").FinalValue = GetPerfCounter(m_svr, m_cmd, "MDX\Total Cells Calculated")
+            m_Counters("Memory\Memory Usage KB").UpdateFinalValue() '= GetPerfCounter(m_svr, m_cmd, "Memory\Memory Usage KB")
+            m_Counters("Storage Engine Query\Total queries answered").UpdateFinalValue() '= GetPerfCounter(m_svr, m_cmd, "Storage Engine Query\Total queries answered")
+            m_Counters("MDX\Total Cells Calculated").UpdateFinalValue() '= GetPerfCounter(m_svr, m_cmd, "MDX\Total Cells Calculated")
+            m_Counters("MDX\Total flat cache inserts").UpdateFinalValue() '= GetPerfCounter(m_svr, m_cmd, "MDX\Total flat cache inserts")
+            m_Counters("MDX\Total NON EMPTY unoptimized").UpdateFinalValue() '= GetPerfCounter(m_svr, m_cmd, "MDX\Total NON EMPTY unoptimized")
+
 
             CellsCalculated = m_Counters("MDX\Total Cells Calculated").Delta
             MemoryUsage = m_Counters("Memory\Memory Usage KB").Delta
             PerfCountersStable = m_Counters("MDX\Total Cells Calculated").IsStable
+            NonEmptyUnoptimized = m_Counters("MDX\Total NON EMPTY unoptimized").Delta
+            FlatCacheInserts = m_Counters("MDX\Total flat cache inserts").Delta
 
             m_trc.Stop()
             m_trc.Drop()
@@ -163,7 +174,7 @@ Public Class CellsetCommand
 
     '// Private Methods
     Private Function CreateCustomSessionTrace(ByVal svr As Server, ByVal sessionId As String) As Trace
-        Dim trc As Trace = svr.Traces.Add()
+        Dim trc As Trace = svr.Traces.Add("PowerSSASBenchmark_" + Guid.NewGuid.ToString())
         trc.Events.Add(GetTraceEvent(TraceEventClass.QueryBegin)) '9
         trc.Events.Add(GetTraceEvent(TraceEventClass.QueryEnd)) '10
         trc.Events.Add(GetTraceEvent(TraceEventClass.QuerySubcube)) '11
@@ -224,19 +235,45 @@ Public Class CellsetCommand
         Return te
     End Function
 
-    Private Function CreatePerfCounterRestriction(ByVal svr As Server, ByVal counterName As String) As AdomdRestrictionCollection
-        Dim res As New AdomdRestrictionCollection()
-        Dim cntrPrefix As String = "\MSAS 2008"
-        If m_svr.Name.Split("\".ToCharArray()(0)).Length > 1 Then
-            cntrPrefix = "\MSOLAP$" + svr.Name.Split("\".ToCharArray()(0))(1)
-        End If
-        res.Add("PERF_COUNTER_NAME", cntrPrefix + ":" + counterName)
-        Return res
-    End Function
+    'Private Function CreatePerfCounterRestriction(ByVal svr As Server, ByVal counterName As String) As AdomdRestrictionCollection
+    '    Dim res As New AdomdRestrictionCollection()
+    '    Dim cntrPrefix As String = "\MSAS 2008"
+    '    If m_svr.Name.Split("\".ToCharArray()(0)).Length > 1 Then
+    '        cntrPrefix = "\MSOLAP$" + svr.Name.Split("\".ToCharArray()(0))(1)
+    '    End If
+    '    res.Add("PERF_COUNTER_NAME", cntrPrefix + ":" + counterName)
+    '    Return res
+    'End Function
 
-    Private Function GetPerfCounter(ByVal svr As Server, ByVal cmd As AdomdCommand, ByVal counterName As String) As Integer
-        Return CType(cmd.Connection.GetSchemaDataSet("DISCOVER_PERFORMANCE_COUNTERS", CreatePerfCounterRestriction(svr, counterName)).Tables(0).Rows(0).Item("PERF_COUNTER_VALUE"), Integer)
-    End Function
+    'Private Function GetPerfCounter(ByVal svr As Server, ByVal cmd As AdomdCommand, ByVal counterName As String) As Integer
+    '    Return CType(cmd.Connection.GetSchemaDataSet("DISCOVER_PERFORMANCE_COUNTERS", CreatePerfCounterRestriction(svr, counterName)).Tables(0).Rows(0).Item("PERF_COUNTER_VALUE"), Integer)
+    'End Function
+
+    Private disposedValue As Boolean = False        ' To detect redundant calls
+
+    ' IDisposable
+    Protected Overridable Sub Dispose(ByVal disposing As Boolean)
+        If Not Me.disposedValue Then
+            If disposing Then
+                'free other state (managed objects).
+                evQueryComplete.Close()
+                evQueryComplete = Nothing
+            End If
+
+            ' TODO: free your own state (unmanaged objects).
+            ' TODO: set large fields to null.
+        End If
+        Me.disposedValue = True
+    End Sub
+
+#Region " IDisposable Support "
+    ' This code added by Visual Basic to correctly implement the disposable pattern.
+    Public Sub Dispose() Implements IDisposable.Dispose
+        ' Do not change this code.  Put cleanup code in Dispose(ByVal disposing As Boolean) above.
+        Dispose(True)
+        GC.SuppressFinalize(Me)
+    End Sub
+#End Region
 
 End Class
 

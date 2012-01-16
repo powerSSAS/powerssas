@@ -18,7 +18,7 @@ Namespace Cmdlets
         End Property
 
         Protected Overrides Sub ProcessRecord()
-            Dim res As String = ""
+            'Dim res As String = ""
             'Dim x As New Microsoft.AnalysisServices.Xmla.XmlaClient
             'Dim Svr As New Server()
             Dim cli As New Microsoft.AnalysisServices.AdomdClient.AdomdConnection("Data Source=" & ServerName)

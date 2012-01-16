@@ -14,7 +14,7 @@ Namespace Cmdlets
         Private evts As WaitHandle()
         Private pr_sync As New Object()
         Private m_event As TraceEventArgs
-        Private m_benchmarkresult As New BenchmarkResult()
+        Private m_benchmarkresult As New MDXBenchmarkResult()
 
         Private mQuery As String = ""
         <Parameter(Position:=0, Mandatory:=True)> _
@@ -26,6 +26,18 @@ Namespace Cmdlets
                 mQuery = value
             End Set
         End Property
+
+        Private mQueryName As String = ""
+        <Parameter(Mandatory:=False)> _
+        Public Property QueryName() As String
+            Get
+                Return mQueryName
+            End Get
+            Set(ByVal value As String)
+                mQueryName = value
+            End Set
+        End Property
+
 
         Private mServerName As String = ""
         <Parameter(Position:=1, ParameterSetName:="byServer")> _
@@ -71,6 +83,17 @@ Namespace Cmdlets
             End Set
         End Property
 
+        Private mClientStatistics As SwitchParameter
+        <Parameter(HelpMessage:="Returns benchmark information instead of data.")> _
+        Public Property ClientStatistics() As SwitchParameter
+            Get
+                Return mClientStatistics
+            End Get
+            Set(ByVal value As SwitchParameter)
+                mClientStatistics = value
+            End Set
+        End Property
+
         Private mConnStr As String = ""
         <Parameter(Position:=1, ParameterSetName:="byConnStr", HelpMessage:="Sets the connection string for the connection that will run the MDX query")> _
         Public Property ConnectionString() As String
@@ -91,28 +114,63 @@ Namespace Cmdlets
                 connStr = svr.ConnectionString & ";Initial Catalog=" & mDatabaseName '& ";SessionId=" & svr.SessionID
             End If
             Dim conn As AdomdConnection = New AdomdConnection(connStr)
-            conn.Open()
-
             Try
-                Dim cmd As New AdomdCommand(mQuery, conn)
+                conn.Open()
+            
+                Try
+                    Dim cmd As New AdomdCommand(mQuery, conn)
 
-                If mBenchmark.IsPresent Then
-                    ReturnBenchmarkResults(cmd)
-                Else
-                    If mAsDataTable.IsPresent Then
-                        ReturnDataTable(cmd)
+                    If mBenchmark.IsPresent Then
+                        ReturnBenchmarkResults(cmd)
+                    ElseIf mClientStatistics.IsPresent Then
+                        ReturnClientStatistics(cmd)
                     Else
-                        ReturnCollectionOfPsObjects(cmd)
+
+                        If mAsDataTable.IsPresent Then
+                            ReturnDataTable(cmd)
+                        Else
+                            ReturnCollectionOfPsObjects(cmd)
+                        End If
                     End If
+                Finally
+                    conn.Close(False)
+                End Try
+            Catch ex As AdomdConnectionException
+                '\\ the inner exception has more information about the specific error
+                '\\ so display that if it is present (as by default PowerShell only 
+                '\\ shows the outermost exception message)
+                If Not ex.InnerException Is Nothing Then
+                    WriteError(New ErrorRecord(ex.InnerException, "", ErrorCategory.NotSpecified, Me))
+                Else
+                    WriteError(New ErrorRecord(ex, "", ErrorCategory.NotSpecified, Me))
                 End If
-            Finally
-                conn.Close(False)
+
+            Catch ex2 As Exception
+                WriteError(New ErrorRecord(ex2, "", ErrorCategory.NotSpecified, Me))
             End Try
+        End Sub
+
+        Private Sub ReturnClientStatistics(ByVal cmd As AdomdCommand)
+            ' Start Stopwatch
+            Dim startTime As DateTime = DateTime.Now()
+            ' execute cellset
+            Dim cs As CellSet
+            cs = cmd.ExecuteCellSet()
+            ' End Stopwatch
+            Dim endTime As DateTime = DateTime.Now()
+            ' write results
+            Dim results As New PSObject
+            results.Properties.Add(New PSNoteProperty("StartTime", startTime))
+            results.Properties.Add(New PSNoteProperty("EndTime", endTime))
+            results.Properties.Add(New PSNoteProperty("Duration", endTime - startTime))
+            results.Properties.Add(New PSNoteProperty("Columns", GetMemberCount(cs, 0)))
+            results.Properties.Add(New PSNoteProperty("Rows", GetMemberCount(cs, 1)))
+            WriteObject(results)
         End Sub
 
         Private Sub ReturnBenchmarkResults(ByVal cmd As AdomdCommand)
             Dim svr As Server = ConnectionFactory.ConnectToServer(ServerName)
-            Dim trc As SessionTrace = svr.SessionTrace
+            'Dim trc As SessionTrace = svr.SessionTrace
             Const EXIT_HANDLE As Integer = 0
             'TODO - implement IsTabular parameter when benchmarking so that we can 
             '       compare flattened vs. Native recordsets.
@@ -146,7 +204,10 @@ Namespace Cmdlets
             m_benchmarkresult.Columns = GetMemberCount(cs, 0)
             m_benchmarkresult.Rows = GetMemberCount(cs, 1)
             m_benchmarkresult.CellsCalculated = asyncCmd.CellsCalculated
-
+            m_benchmarkresult.FlatCacheInserts = asyncCmd.FlatCacheInserts
+            m_benchmarkresult.StablePerformanceCounters = asyncCmd.PerfCountersStable
+            m_benchmarkresult.NonEmptyUnoptimized = asyncCmd.NonEmptyUnoptimized
+            m_benchmarkresult.QueryName = mQueryName
             WriteObject(m_benchmarkresult)
 
             'endTime = DateTime.Now()
@@ -222,27 +283,27 @@ Namespace Cmdlets
         End Function
     End Class
 
-    'TODO - formatting of results, should this be done with powershell format file?
-    Public Class BenchmarkResult
-        Public QueryDurationMS As Long
-        Public QuerySubcubeDurationMS As Long
-        Public QuerySubcubeCount As Long
-        Public CacheHit As Long
-        Public AggHit As Long
-        Public Rows As Long
-        Public Columns As Long
-        Public StartTime As Date
-        Public Endtime As Date
-        Public CellsCalculated As Long
-        Public ReadOnly Property FERatio() As Double
-            Get
-                Return (QueryDurationMS - QuerySubcubeDurationMS) / QueryDurationMS
-            End Get
-        End Property
-        'Public ReadOnly Property QueryDuration() As TimeSpan
-        '    Get
-        '        Return New TimeSpan(0, 0, 0, 0, QueryDurationMS)
-        '    End Get
-        'End Property
-    End Class
+    ''TODO - formatting of results, should this be done with powershell format file?
+    'Public Class BenchmarkResult
+    '    Public QueryDurationMS As Long
+    '    Public QuerySubcubeDurationMS As Long
+    '    Public QuerySubcubeCount As Long
+    '    Public CacheHit As Long
+    '    Public AggHit As Long
+    '    Public Rows As Long
+    '    Public Columns As Long
+    '    Public StartTime As Date
+    '    Public Endtime As Date
+    '    Public CellsCalculated As Long
+    '    Public ReadOnly Property FERatio() As Double
+    '        Get
+    '            Return (QueryDurationMS - QuerySubcubeDurationMS) / QueryDurationMS
+    '        End Get
+    '    End Property
+    '    'Public ReadOnly Property QueryDuration() As TimeSpan
+    '    '    Get
+    '    '        Return New TimeSpan(0, 0, 0, 0, QueryDurationMS)
+    '    '    End Get
+    '    'End Property
+    'End Class
 End Namespace

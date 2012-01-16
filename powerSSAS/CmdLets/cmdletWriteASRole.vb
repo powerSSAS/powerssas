@@ -2,8 +2,8 @@
 Imports Microsoft.AnalysisServices
 Imports System.Collections
 
-<Cmdlet("Script", "ASRole")> _
-Public Class cmdletScriptASRole
+<Cmdlet(VerbsCommunications.Write, "ASRole")> _
+Public Class cmdletWriteASRole
     Inherits Cmdlet
 
     Private mServerName As String = ""
