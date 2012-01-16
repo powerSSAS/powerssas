@@ -5,7 +5,7 @@ Imports System.Threading
 Imports System
 
 Namespace Cmdlets
-    <Cmdlet("Process", "ASObject")> _
+    <Cmdlet(VerbsLifecycle.Invoke, "ASProcess")> _
     Public Class cmdletInvokeASProcess
         Inherits Cmdlet
         Private evStat As New AutoResetEvent(False) 'ManualResetEvent(False)

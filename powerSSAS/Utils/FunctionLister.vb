@@ -140,7 +140,7 @@ Namespace Utils
         '// This function strips off any leading namespaces from a type name
         '// to make it more concise.
         Private Shared Function StripNamespace(ByVal typeName As String) As String
-            Dim lastDot As Integer = typeName.LastIndexOf(".")
+            Dim lastDot As Integer = typeName.LastIndexOf(".", StringComparison.InvariantCulture)
             If (lastDot > 0) Then
                 Return typeName.Substring(lastDot + 1)
             Else

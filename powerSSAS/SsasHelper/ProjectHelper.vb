@@ -184,7 +184,7 @@ Public Class ProjectHelper
             Directory.CreateDirectory(targetDirectory)
         End If
 
-        If (Not targetDirectory.EndsWith("\\")) Then
+        If (Not targetDirectory.EndsWith("\\", StringComparison.InvariantCulture)) Then
             targetDirectory &= "\\"
         End If
 
@@ -405,7 +405,7 @@ Public Class ProjectHelper
 
                 '// Dimension annotations don't tend to be as volatile as other annotations
                 '// We might not want to remove them
-                If ((removeDimensionAnnotations) Or (Not filename.EndsWith(".dim"))) Then
+                If ((removeDimensionAnnotations) Or (Not filename.EndsWith(".dim", StringComparison.InvariantCulture))) Then
 
                     nodeList = document.SelectNodes("//AS:Annotations", xmlnsManager)
                     If (XmlHelper.RemoveNodes(nodeList) > 0) Then fileChanged = True

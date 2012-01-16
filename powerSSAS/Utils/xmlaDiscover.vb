@@ -13,7 +13,7 @@ Namespace Utils
             mStopping = True
         End Sub
 
-        Private mStopping As Boolean '= False
+        Private mStopping As Boolean = False
         Public ReadOnly Property Stopping() As Boolean
             Get
                 Return mStopping
@@ -39,14 +39,15 @@ Namespace Utils
                 End If
                 Dim conn As New AdomdConnection(connStr)
                 Try
-                    Dim res As String = ""
                     If command.Contains("<") Then
+                        'Dim res As String = ""
                         'res = x.Send(command, Nothing)
                         Throw (New ArgumentException("Invalid command Schema Rowset name: " & command))
                     Else
                         conn.Open()
                         ds = conn.GetSchemaDataSet(command.ToUpper(), restrictions)
                         outputCallback(ds.Tables.Item(0))
+                        'outputCallback(ds)
                     End If
 
                     'If rawResultSet Then
@@ -60,12 +61,12 @@ Namespace Utils
             End If
         End Sub
 
-        Private Sub ProcessDataSet(ByVal serverName As String, ByVal ds As DataSet, ByVal OutputCallback As OutputObjectCallback)
-            For Each dr As DataRow In ds.Tables(0).Rows
+        'Private Sub ProcessDataSet(ByVal serverName As String, ByVal ds As DataSet, ByVal OutputCallback As OutputObjectCallback)
+        '    For Each dr As DataRow In ds.Tables(0).Rows
 
-                OutputCallback(GetPSObject(dr, serverName))
-            Next
-        End Sub
+        '        OutputCallback(GetPSObject(dr, serverName))
+        '    Next
+        'End Sub
 
         '// This routine is fairly "brute force", creating an XmlDocument and 
         '// then iterating through the nodes
@@ -111,11 +112,10 @@ Namespace Utils
                 conn.Close()
             End Try
 
-            Return GetObjectListFromDataSet(serverName, ds)
+            Return GetObjectListFromDataSet(ds)
         End Function
 
-        Private Function GetObjectListFromDataSet(ByVal serverName As String, ByVal ds As DataSet) As System.Collections.ObjectModel.Collection(Of Object)
-            'TODO Implement GetObjectListFromDataSet
+        Private Function GetObjectListFromDataSet(ByVal ds As DataSet) As System.Collections.ObjectModel.Collection(Of Object)
             Dim coll As New System.Collections.ObjectModel.Collection(Of Object)
             For Each dr As DataRow In ds.Tables(0).Rows
                 Dim o As New PSObject
@@ -128,31 +128,30 @@ Namespace Utils
                 coll.Add(o)
             Next
             Return coll
-            'Throw New NotImplementedException("GetObjectListFromDataSet")
         End Function
 
-        '// This routine is fairly "brute force", creating an XmlDocument and 
-        '// then iterating through the nodes
-        Private Function GetObjectListFromXmla(ByVal serverName As String, ByVal xmlaResult As String) As System.Collections.ObjectModel.Collection(Of Object)
+        ''// This routine is fairly "brute force", creating an XmlDocument and 
+        ''// then iterating through the nodes
+        'Private Function GetObjectListFromXmla(ByVal serverName As String, ByVal xmlaResult As String) As System.Collections.ObjectModel.Collection(Of Object)
 
-            Dim rowSchema As New Dictionary(Of String, String)
-            Dim doc As XmlDocument = New XmlDocument()
-            doc.LoadXml(xmlaResult)
-            Dim lst As New System.Collections.ObjectModel.Collection(Of Object)
+        '    Dim rowSchema As New Dictionary(Of String, String)
+        '    Dim doc As XmlDocument = New XmlDocument()
+        '    doc.LoadXml(xmlaResult)
+        '    Dim lst As New System.Collections.ObjectModel.Collection(Of Object)
 
-            '//               return         root       schema/rows       Look for element with attribute "name" = row
-            '//                  ^             ^             ^             ^
-            '//xmlDom.ChildNodes[0].ChildNodes[0].ChildNodes[0].ChildNodes[0].Attributes.Count
-            For Each n As XmlNode In doc.ChildNodes(0).ChildNodes(0).ChildNodes
-                If ((n.NodeType = XmlNodeType.Element) AndAlso (n.LocalName = "schema")) Then
-                    rowSchema = buildPSObjectFromSchema(n)
-                End If
-                If ((n.NodeType = XmlNodeType.Element) AndAlso (n.LocalName = "row")) Then
-                    lst.Add(GetPSObject(rowSchema, serverName, n))
-                End If
-            Next 'n            
-            Return lst
-        End Function
+        '    '//               return         root       schema/rows       Look for element with attribute "name" = row
+        '    '//                  ^             ^             ^             ^
+        '    '//xmlDom.ChildNodes[0].ChildNodes[0].ChildNodes[0].ChildNodes[0].Attributes.Count
+        '    For Each n As XmlNode In doc.ChildNodes(0).ChildNodes(0).ChildNodes
+        '        If ((n.NodeType = XmlNodeType.Element) AndAlso (n.LocalName = "schema")) Then
+        '            rowSchema = buildPSObjectFromSchema(n)
+        '        End If
+        '        If ((n.NodeType = XmlNodeType.Element) AndAlso (n.LocalName = "row")) Then
+        '            lst.Add(GetPSObject(rowSchema, serverName, n))
+        '        End If
+        '    Next 'n            
+        '    Return lst
+        'End Function
 
 
         Private Shared Function buildPSObjectFromSchema(ByVal n As XmlNode) As Dictionary(Of String, String)

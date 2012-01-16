@@ -3,8 +3,8 @@ Imports Microsoft.AnalysisServices
 Imports Gosbell.PowerSSAS.PowerSSASProvider
 
 Namespace Cmdlets
-    <Cmdlet(VerbsCommon.[New], "ASScript")> _
-    Public Class cmdletNewAsScript
+    <Cmdlet(VerbsCommunications.Write, "ASObject")> _
+    Public Class cmdletWriteAsObject
         Inherits PSCmdlet
 
         Private mCreate As SwitchParameter

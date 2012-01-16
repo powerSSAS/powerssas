@@ -109,7 +109,7 @@ CreateZip(2005)
     write-Host "Completed NSIS"
 
 #Create .zip file for SSAS 2008 v2 Module
-CreateZip(2008)
+CreateZip 2008 
 
 
 
