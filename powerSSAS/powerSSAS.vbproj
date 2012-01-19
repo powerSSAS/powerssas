@@ -87,10 +87,6 @@
     <Otherwise>
       <ItemGroup>
         <!--<Message Text="Using 2008 References" Importance="high" /> -->
-        <Reference Include="MDXParser, Version=0.4.12.0, Culture=neutral, processorArchitecture=MSIL">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>..\..\..\Download\Microsoft\Analysis Services\MDX Studio\MDXStudio2008\MDXParser.dll</HintPath>
-        </Reference>
         <Reference Include="Microsoft.AnalysisServices, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">
           <!-- <Private>True</Private> -->
         </Reference>
@@ -234,9 +230,7 @@
     <Content Include="Setup\powerSSASHeader.bmp" />
     <Content Include="Setup\powerSSASHeader.png" />
     <Content Include="Setup\powerSSAS_banner.gif" />
-    <Compile Include="CmdLets\cmdletFormatASMdx.vb" />
     <Compile Include="CmdLets\cmdletGetASProject.vb" />
-    <Compile Include="CmdLets\cmdletInvokeAsMdxAnalyze.vb" />
     <Compile Include="CmdLets\cmdletInvokeASProcess.vb" />
     <Compile Include="CmdLets\cmdletRemoveASRole.vb" />
     <Compile Include="CmdLets\cmdletWriteASRole.vb" />
