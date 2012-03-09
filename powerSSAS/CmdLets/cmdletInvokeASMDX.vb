@@ -279,7 +279,11 @@ Namespace Cmdlets
         End Sub
 
         Private Function GetMemberCount(ByVal cs As CellSet, ByVal axis As Integer) As Long
-            Return cs.Axes(axis).Set.Tuples.Count
+            If axis > cs.Axes.Count Then
+                Return 0
+            Else
+                Return cs.Axes(axis).Set.Tuples.Count
+            End If
         End Function
     End Class
 
